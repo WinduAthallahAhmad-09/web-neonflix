@@ -25,8 +25,7 @@ export const movies: Movie[] = [
     tagline: "A fresh dawn over a forgotten identity",
     synopsis:
       "Setelah seluruh dunia melupakan identitas Peter Parker, ia memulai hidup baru di jalanan kota New York sebagai pahlawan tanpa nama. Namun ketika gelombang sindikat kejahatan berteknologi tinggi mulai mengancam ketertiban kota, Spider-Man harus berjuang kembali membela yang lemah dan membuktikan bahwa kepahlawanan sejati lahir dari ketulusan hati dan pengorbanan tanpa pamrih.",
-    posterUrl:
-      "https://images.unsplash.com/photo-1635805737707-575885ab0820?w=800&q=90&auto=format&fit=crop",
+    posterUrl: "/images/posters/spiderman-poster.png",
     backdropUrl: "/images/backdrops/spiderman-backdrop.webp",
     genre: ["Action", "Adventure", "Superhero", "Sci-Fi"],
     duration: 154,
@@ -46,8 +45,7 @@ export const movies: Movie[] = [
     tagline: "Why So Serious? Order versus total Chaos",
     synopsis:
       "Dengan bantuan Letnan Jim Gordon dan Jaksa Wilayah Harvey Dent, Batman berhasil menekan kejahatan terorganisir di Gotham. Namun ketertiban itu hancur saat dalang kriminal psikopat bernama Joker muncul, melepaskan gelombang teror anarkis yang memaksa sang Ksatria Kegelapan menghadapi garis tipis antara pahlawan sejati dan penjahat.",
-    posterUrl:
-      "https://images.unsplash.com/photo-1509281373149-e957c6296406?w=800&q=90&auto=format&fit=crop",
+    posterUrl: "/images/posters/batman-poster.png",
     backdropUrl: "/images/backdrops/batman-backdrop.png",
     genre: ["Action", "Crime", "Thriller", "Dark Drama"],
     duration: 152,
@@ -67,8 +65,7 @@ export const movies: Movie[] = [
     tagline: "City of dreams, city of chrome and burning souls",
     synopsis:
       "Di kota metropolitan distopia Night City yang terobsesi dengan modifikasi tubuh cybernetic dan kekuasaan korporat, David Martinez—seorang anak jalanan berbakat—kehilangan segalanya dalam tragedi berdarah. Demi bertahan hidup dan mewujudkan impian wanita yang dicintainya (Lucy), ia memasang implan militer terlarang Sandevistan dan menjadi tentara bayaran legendaris: seorang Edgerunner.",
-    posterUrl:
-      "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&q=90&auto=format&fit=crop",
+    posterUrl: "/images/posters/edgerunners-poster.png",
     backdropUrl: "/images/backdrops/edgerunners-backdrop.jpg",
     genre: ["Anime", "Cyberpunk", "Action", "Sci-Fi", "Drama"],
     duration: 140,
@@ -88,8 +85,7 @@ export const movies: Movie[] = [
     tagline: "Earth's mightiest heroes stand united",
     synopsis:
       "Ketika dewa Asgard yang licik, Loki, memperoleh kubus kosmik Tesseract dan memimpin pasukan alien Chitauri untuk menaklukkan planet Bumi, Nick Fury mengaktifkan 'Inisiatif Avengers'. Iron Man, Captain America, Thor, The Hulk, Black Widow, dan Hawkeye harus mengesampingkan ego pribadi untuk bersatu menjadi garis pertahanan terakhir seluruh umat manusia.",
-    posterUrl:
-      "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&q=90&auto=format&fit=crop",
+    posterUrl: "/images/posters/avengers-poster.png",
     backdropUrl: "/images/backdrops/avengers-backdrop.webp",
     genre: ["Action", "Sci-Fi", "Adventure", "Superhero"],
     duration: 143,
@@ -108,9 +104,8 @@ export const movies: Movie[] = [
     title: "THE ODYSSEY",
     tagline: "The epic mythical journey across wrath and darkness",
     synopsis:
-      "Setelah jatuhnya kota Troya dalam perang legendaris, Raja Ithaca yang cerdik, Odysseus, memimpin pasukannya menempuh pelayaran pulang ke tanah air. Namun murka Dewa Laut Poseidon mengutuk perjalanan mereka, melemparkan armada mereka ke pulau-pulau terkutuk yang dihuni Cyclops, penyihir Circe, godaan maut Siren, dan monster raksasa Scylla.",
-    posterUrl:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&q=90&auto=format&fit=crop",
+      "Setelah kemenangan legendaris dalam Perang Troya, Raja Ithaca yang cerdik, Odysseus, memimpin pasukannya menempuh pelayaran pulang ke tanah air. Namun murka Dewa Laut Poseidon mengutuk perjalanan mereka, melemparkan armada mereka ke pulau-pulau terkutuk yang dihuni Cyclops, penyihir Circe, godaan maut Siren, dan monster raksasa Scylla.",
+    posterUrl: "/images/posters/odyssey-poster.png",
     backdropUrl: "/images/backdrops/odyssey-backdrop.webp",
     genre: ["Action", "Adventure", "Epic Drama", "Mythology"],
     duration: 168,
@@ -130,8 +125,7 @@ export const movies: Movie[] = [
     tagline: "Breaking the canon across infinite realities",
     synopsis:
       "Miles Morales melintasi dimensi alternatif untuk menyelamatkan orang-orang yang dicintainya dari kehancuran multiverse. Pertarungan tak terelakkan terjadi ketika ia harus menentang seluruh Spider-Society demi menulis takdirnya sendiri.",
-    posterUrl:
-      "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=800&q=90&auto=format&fit=crop",
+    posterUrl: "/images/posters/spiderman-poster.png",
     backdropUrl: "/images/backdrops/spiderman-backdrop.webp",
     genre: ["Animation", "Action", "Multiverse Sci-Fi"],
     duration: 145,
@@ -151,8 +145,7 @@ export const movies: Movie[] = [
     tagline: "The battle for the final universe",
     synopsis:
       "Saat tabrakan incursion antar-semesta mengancam menghapus seluruh eksistensi, para pahlawan dari berbagai timeline multiverse berkumpul di Battleworld untuk menghadapi entitas kosmik terkuat yang pernah ada.",
-    posterUrl:
-      "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=800&q=90&auto=format&fit=crop",
+    posterUrl: "/images/posters/avengers-poster.png",
     backdropUrl: "/images/backdrops/avengers-backdrop.webp",
     genre: ["Action", "Sci-Fi", "Cosmic Epic"],
     duration: 180,
@@ -172,8 +165,7 @@ export const movies: Movie[] = [
     tagline: "Freedom has a fatal price in Dogtown",
     synopsis:
       "Di distrik terisolasi paling berbahaya di Night City, agen rahasia Solomon Reed dan hacker misterius Songbird terlibat dalam konspirasi politik tingkat tinggi yang mengancam kestabilan seluruh New USA.",
-    posterUrl:
-      "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&q=90&auto=format&fit=crop",
+    posterUrl: "/images/posters/edgerunners-poster.png",
     backdropUrl: "/images/backdrops/edgerunners-backdrop.jpg",
     genre: ["Cyberpunk", "Spy Thriller", "Action"],
     duration: 135,
