@@ -19,13 +19,11 @@ function generateShowtimes(): Showtime[] {
   const today = new Date();
 
   const movieSchedules: Record<string, string[]> = {
-    "neural-storm": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
-    "chrome-runners": ["neonflix-central", "neonflix-kemang"],
-    "phantom-protocol": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
-    "neon-samurai": ["neonflix-pik", "neonflix-kemang"],
-    "digital-ghosts": ["neonflix-central", "neonflix-pik"],
-    "zero-gravity": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
-    afterglow: ["neonflix-kemang", "neonflix-pik"],
+    "spiderman-brand-new-day": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
+    "batman-dark-knight": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
+    "cyberpunk-edgerunners": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
+    "avengers-assemble": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
+    "the-odyssey": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
   };
 
   const studioConfigs: Record<
@@ -71,7 +69,7 @@ function generateShowtimes(): Showtime[] {
         date.setDate(today.getDate() + dayOffset);
         const dateStr = date.toISOString().split("T")[0];
 
-        const dayTimes = times.filter(() => Math.random() > 0.3);
+        const dayTimes = times.filter(() => Math.random() > 0.2);
 
         dayTimes.forEach((time) => {
           const availableSeats =
