@@ -1,26 +1,310 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0f;
+  --foreground: #f0f0f0;
+  --neon-red: #ff0033;
+  --neon-magenta: #ff2e77;
+  --neon-cyan: #00f7ff;
+  --neon-purple: #b026ff;
+  --neon-green: #39ff14;
+  --neon-yellow: #f5ff00;
+  --dark-bg: #0a0a0f;
+  --dark-card: #12121a;
+  --dark-surface: #1a1a2e;
+  --dark-border: #1e1e2e;
+  --text-secondary: #8b8b9e;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-neon-red: var(--neon-red);
+  --color-neon-magenta: var(--neon-magenta);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-purple: var(--neon-purple);
+  --color-neon-green: var(--neon-green);
+  --color-neon-yellow: var(--neon-yellow);
+  --color-dark-bg: var(--dark-bg);
+  --color-dark-card: var(--dark-card);
+  --color-dark-surface: var(--dark-surface);
+  --color-dark-border: var(--dark-border);
+  --color-text-secondary: var(--text-secondary);
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-jetbrains: "JetBrains Mono", monospace;
+  --font-inter: "Inter", sans-serif;
+
+  --animate-neon-pulse: neon-pulse 2s ease-in-out infinite;
+  --animate-flicker: flicker 3s infinite;
+  --animate-scanline: scanline 8s linear infinite;
+  --animate-glitch: glitch 2s infinite;
+  --animate-glow-red: glow-red 2s ease-in-out infinite alternate;
+  --animate-glow-cyan: glow-cyan 2s ease-in-out infinite alternate;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-slide-up: slide-up 0.5s ease-out;
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-count-up: count-up 1s ease-out;
+  --animate-cyber-border: cyber-border 3s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============ KEYFRAMES ============ */
+
+@keyframes neon-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.33; }
+}
+
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes glitch {
+  0% { clip-path: inset(40% 0 61% 0); transform: translate(-2px, 2px); }
+  20% { clip-path: inset(92% 0 1% 0); transform: translate(1px, -1px); }
+  40% { clip-path: inset(43% 0 1% 0); transform: translate(-1px, 3px); }
+  60% { clip-path: inset(25% 0 58% 0); transform: translate(3px, 1px); }
+  80% { clip-path: inset(54% 0 7% 0); transform: translate(-3px, -2px); }
+  100% { clip-path: inset(58% 0 43% 0); transform: translate(2px, -3px); }
+}
+
+@keyframes glow-red {
+  from { box-shadow: 0 0 5px var(--neon-red), 0 0 10px var(--neon-red), 0 0 20px var(--neon-red); }
+  to { box-shadow: 0 0 10px var(--neon-red), 0 0 20px var(--neon-red), 0 0 40px var(--neon-red); }
+}
+
+@keyframes glow-cyan {
+  from { box-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan); }
+  to { box-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes count-up {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes cyber-border {
+  0% { border-color: var(--neon-red); }
+  33% { border-color: var(--neon-magenta); }
+  66% { border-color: var(--neon-purple); }
+  100% { border-color: var(--neon-red); }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ============ BASE STYLES ============ */
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
+  background: var(--dark-bg);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+}
+
+/* ============ CUSTOM SCROLLBAR ============ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neon-red);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-magenta);
+}
+
+/* ============ NEON GLOW UTILITIES ============ */
+
+.neon-glow-red {
+  box-shadow: 0 0 5px var(--neon-red), 0 0 10px var(--neon-red), 0 0 20px rgba(255, 0, 51, 0.3);
+}
+
+.neon-glow-cyan {
+  box-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px rgba(0, 247, 255, 0.3);
+}
+
+.neon-glow-magenta {
+  box-shadow: 0 0 5px var(--neon-magenta), 0 0 10px var(--neon-magenta), 0 0 20px rgba(255, 46, 119, 0.3);
+}
+
+.neon-glow-purple {
+  box-shadow: 0 0 5px var(--neon-purple), 0 0 10px var(--neon-purple), 0 0 20px rgba(176, 38, 255, 0.3);
+}
+
+.neon-glow-green {
+  box-shadow: 0 0 5px var(--neon-green), 0 0 10px var(--neon-green), 0 0 20px rgba(57, 255, 20, 0.3);
+}
+
+/* ============ NEON TEXT UTILITIES ============ */
+
+.neon-text-red {
+  text-shadow: 0 0 7px var(--neon-red), 0 0 10px var(--neon-red), 0 0 21px var(--neon-red), 0 0 42px rgba(255, 0, 51, 0.5);
+}
+
+.neon-text-cyan {
+  text-shadow: 0 0 7px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 21px var(--neon-cyan), 0 0 42px rgba(0, 247, 255, 0.5);
+}
+
+.neon-text-magenta {
+  text-shadow: 0 0 7px var(--neon-magenta), 0 0 10px var(--neon-magenta), 0 0 21px var(--neon-magenta);
+}
+
+/* ============ GLASSMORPHISM ============ */
+
+.glassmorphism {
+  background: rgba(18, 18, 26, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 0, 51, 0.15);
+}
+
+/* ============ SCANLINE OVERLAY ============ */
+
+.scanline::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============ CYBER CLIP PATH ============ */
+
+.cyber-clip {
+  clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+}
+
+.cyber-clip-sm {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+/* ============ GLITCH TEXT ============ */
+
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  color: var(--neon-cyan);
+  animation: glitch 2s infinite;
+  z-index: -1;
+}
+
+.glitch::after {
+  color: var(--neon-red);
+  animation: glitch 2s infinite reverse;
+  z-index: -2;
+}
+
+/* ============ GRADIENT UTILITIES ============ */
+
+.gradient-red-magenta {
+  background: linear-gradient(135deg, var(--neon-red), var(--neon-magenta));
+}
+
+.gradient-dark-overlay {
+  background: linear-gradient(to top, var(--dark-bg) 0%, transparent 50%, rgba(10, 10, 15, 0.8) 100%);
+}
+
+.gradient-dark-bottom {
+  background: linear-gradient(to top, var(--dark-bg), transparent);
+}
+
+/* ============ HUD BORDER ============ */
+
+.hud-border {
+  border: 1px solid rgba(255, 0, 51, 0.3);
+  position: relative;
+}
+
+.hud-border::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--neon-red), transparent);
+}
+
+/* ============ NOISE TEXTURE ============ */
+
+.noise-bg {
+  position: relative;
+}
+
+.noise-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.5'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============ SELECTION ============ */
+
+::selection {
+  background: rgba(255, 0, 51, 0.3);
+  color: white;
 }

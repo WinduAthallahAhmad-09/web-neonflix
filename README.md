@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 NEONFLIX — Cyberpunk Gamification Cinema App
 
-## Getting Started
+**NEONFLIX** adalah platform pemesanan tiket bioskop online modern bertema **Cyberpunk Gamification** dengan nuansa neon gelap (Dominan Red/Magenta & Cyan) yang terinspirasi dari game interface masa depan.
 
-First, run the development server:
+---
+
+## 🌟 Fitur Utama
+
+1. **🏠 Homepage & Film Catalog**
+   - Hero Section cinematic dengan glitch text & dynamic HUD stats.
+   - Now Showing grid dengan efek 3D hover tilt & badge status neon.
+   - Coming Soon carousel dilengkapi real-time countdown timer.
+
+2. **📅 Detail Film & Jadwal (Showtime Selector)**
+   - Khusus cabang **Jakarta** (Central Park, PIK Avenue, Kemang Village).
+   - Pemilihan tanggal interaktif (7 hari ke depan).
+   - Filter studio: **Regular**, **IMAX**, **4DX**, dan **Premiere** dengan indikator kursi tersisa.
+
+3. **💺 Pemilihan Kursi Interaktif (Seat Selection Map)**
+   - Peta kursi beranimasi warna status:
+     - 🟢 **Available**
+     - 🔴 **Occupied**
+     - 🔵 **Selected** (Pulsing Neon Glow)
+     - 🟡 **VIP Seats** (Gold Glow)
+   - Indikator layar bioskop ber-neon.
+   - Maksimal 6 kursi per transaksi dengan ringkasan harga langsung.
+
+4. **🍿 Food & Drinks Ordering (Cyber Concession)**
+   - 4 Kategori: Popcorn, Drinks, Snacks, Combos.
+   - Badge Best Seller, New, Popular, & Limited.
+   - Kontrol kuantiti & keranjang pemesanan real-time.
+
+5. **💳 Checkout & Payment Simulation**
+   - Ringkasan total tiket + makanan + biaya layanan.
+   - Pilihan metode bayar: Credit Card, GoPay, OVO, Dana.
+   - Dukungan input promo code.
+
+6. **🎫 E-Ticket & Reward XP (Gamification)**
+   - E-Ticket futuristik dengan barcode ID transaksi & QR pattern.
+   - Notifikasi perolehan XP (+100 XP per tiket, +25 XP per makanan).
+   - Efek perayaan konfeti/partikel.
+
+7. **🎮 Profil & Sistem Gamifikasi (Dashboard)**
+   - **Level & XP Progress Bar**: 10 Tier Level (ROOKIE ➔ NEON GOD).
+   - **8 Achievements/Badges**: Unlockable milestones (First Blood, Night Owl, Snack Lord, Front Row Warrior, VIP Access, dll).
+   - **Riwayat Transaksi**: Status Upcoming & Completed dengan perolehan XP.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS 4 + Custom CSS Animations & Glitch Keyframes
+- **State Management**: Zustand
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **Typography**: Orbitron, JetBrains Mono, Inter
+
+---
+
+## 🚀 Cara Menjalankan Secara Lokal
 
 ```bash
+# Masuk ke folder aplikasi
+cd neonflix-app
+
+# Install dependencies jika belum
+npm install
+
+# Jalankan server development
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000) di browser Anda.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌐 Deploy ke Vercel
 
-## Learn More
+### Opsi 1: Menggunakan Vercel CLI
+```bash
+cd neonflix-app
+npx vercel
+```
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Opsi 2: Menggunakan Dashboard Vercel (Git Push)
+1. Push folder proyek ke repository GitHub / GitLab.
+2. Buka [vercel.com](https://vercel.com) dan import repository Anda.
+3. Set **Root Directory** ke `neonflix-app` (jika repo berisi subfolder).
+4. Klik **Deploy**!
