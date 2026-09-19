@@ -21,17 +21,19 @@ import {
   Clock,
 } from "lucide-react";
 
+import { getYoutubeId } from "@/lib/utils";
+
 interface TrailerHeroCarouselProps {
   movies: Movie[];
 }
 
-// Map movie IDs to their official trailer YouTube IDs
+// Map movie IDs to user-provided trailer YouTube IDs
 const TRAILER_IDS: Record<string, string> = {
-  "spiderman-brand-new-day": "RTUMdnzA0es", // Spider-Man No Way Home / Brand New Day Prelude
-  "batman-dark-knight": "EXeDt_Z-1sU", // The Dark Knight official 4K trailer
-  "cyberpunk-edgerunners": "JtHzB1huT_o", // Cyberpunk Edgerunners official trailer
-  "avengers-assemble": "eOrNdBpGMv8", // Marvel's The Avengers official trailer
-  "the-odyssey": "tLlcIfmqcPw", // The Return / Homer's Odyssey official trailer
+  "spiderman-brand-new-day": "daXaTug8rL4", // Spider-Man: Brand New Day (User Link)
+  "batman-dark-knight": "EXeTwQWrcwY",      // The Dark Knight (User Link)
+  "cyberpunk-edgerunners": "x4ztgjvfU60",   // Cyberpunk: Edgerunners (User Link)
+  "avengers-assemble": "NPoHPNeU9fc",       // Avengers (User Link)
+  "the-odyssey": "LgOMT7ka6do",             // The Odyssey (User Link)
 };
 
 export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
@@ -44,7 +46,7 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const movie = movies[activeIdx] || movies[0];
-  const youtubeId = TRAILER_IDS[movie.id] || "EXeDt_Z-1sU";
+  const youtubeId = getYoutubeId(movie.trailerUrl) || TRAILER_IDS[movie.id] || "daXaTug8rL4";
 
   // Slide navigation
   const nextSlide = () => {

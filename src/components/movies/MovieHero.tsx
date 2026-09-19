@@ -8,6 +8,7 @@ import { GlitchText } from "@/components/ui/GlitchText";
 import { NeonBadge } from "@/components/ui/NeonBadge";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { soundFx } from "@/lib/soundFx";
+import { getYoutubeId } from "@/lib/utils";
 import {
   Play,
   Sparkles,
@@ -269,8 +270,8 @@ export function MovieHero({ movie }: MovieHeroProps) {
               <div className="aspect-video w-full bg-black border border-dark-border relative flex items-center justify-center overflow-hidden">
                 <iframe
                   className="w-full h-full"
-                  src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
-                  title="Movie Trailer"
+                  src={`https://www.youtube-nocookie.com/embed/${getYoutubeId(movie.trailerUrl)}?autoplay=1`}
+                  title={`${movie.title} Trailer`}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
