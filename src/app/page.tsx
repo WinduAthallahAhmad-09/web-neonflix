@@ -1,4 +1,4 @@
-import { HeroSection } from "@/components/home/HeroSection";
+import { TrailerHeroCarousel } from "@/components/home/TrailerHeroCarousel";
 import { NowShowingSection } from "@/components/home/NowShowingSection";
 import { ComingSoonSection } from "@/components/home/ComingSoonSection";
 import { StatsBar } from "@/components/home/StatsBar";
@@ -8,29 +8,29 @@ import "@/app/homepage-effects.css";
 
 export default function Home() {
   const nowShowing = getNowShowing();
-  const featuredMovie = nowShowing[0];
 
   return (
     <main className="min-h-screen bg-dark-bg text-white overflow-x-hidden">
-      {/* Cinematic Full-Screen Hero Carousel */}
-      {featuredMovie && <HeroSection movie={featuredMovie} />}
+      {/* ── Top Widescreen Real Movie Trailer Carousel (Cinema 21 Style) ── */}
+      <TrailerHeroCarousel movies={nowShowing} />
 
-      {/* Live ticker */}
+      {/* ── Live Cinema Broadcast Ticker ── */}
       <NewsTicker />
 
-      {/* Animated stats counter */}
+      {/* ── Operator Stats Counter Pods ── */}
       <StatsBar />
 
-      {/* Neon glowing divider */}
+      {/* ── Clean Neon Divider ── */}
       <div className="neon-divider mx-0 my-2" />
 
-      {/* Now Showing — scroll reveal cards */}
+      {/* ── Now Showing (Times & Tickets) Section ── */}
       <div className="relative">
         <NowShowingSection />
 
-        {/* Gradient separator */}
+        {/* ── Gradient Separator ── */}
         <div className="neon-divider mx-auto my-2 max-w-5xl" />
 
+        {/* ── Coming Soon Section ── */}
         <ComingSoonSection />
       </div>
     </main>
