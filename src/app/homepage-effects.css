@@ -1,0 +1,258 @@
+/* ============ HOMEPAGE ENHANCEMENTS ============ */
+
+/* Spotlight / Beam Effect */
+@keyframes spotlight {
+  0% { opacity: 0; transform: translate(-72%, -62%) scale(0.5); }
+  100% { opacity: 1; transform: translate(-50%,-40%) scale(1); }
+}
+
+/* Animated gradient border */
+@keyframes border-beam {
+  0% { offset-distance: 0%; }
+  100% { offset-distance: 100%; }
+}
+
+/* Meteors / shooting stars */
+@keyframes meteor {
+  0% { transform: rotate(215deg) translateX(0); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: rotate(215deg) translateX(-500px); opacity: 0; }
+}
+
+/* Grid background shimmer */
+@keyframes grid-shimmer {
+  0% { background-position: 0 0; }
+  100% { background-position: 60px 60px; }
+}
+
+/* Shimmer sweep effect */
+@keyframes shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Gradient text animation */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Ticker marquee */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Flip card */
+@keyframes flip-in {
+  0% { transform: rotateY(-90deg); opacity: 0; }
+  100% { transform: rotateY(0deg); opacity: 1; }
+}
+
+/* Particle float up */
+@keyframes particle-rise {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-200px) scale(0); opacity: 0; }
+}
+
+/* ============ HERO ENHANCEMENTS ============ */
+
+/* Animated spotlight / radial beam */
+.hero-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 80% at 50% -20%,
+    rgba(255, 0, 51, 0.18),
+    rgba(255, 46, 119, 0.08),
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Moving grid background */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(255, 0, 51, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 51, 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: grid-shimmer 4s linear infinite;
+}
+
+/* Gradient animated title text */
+.gradient-title {
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #ff0033 25%,
+    #ff2e77 50%,
+    #ffffff 75%,
+    #00f7ff 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 5s ease infinite;
+}
+
+/* Shimmer card effect */
+.shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(255, 255, 255, 0.06) 50%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Meteor shooting star */
+.meteor {
+  position: absolute;
+  width: 1px;
+  height: 80px;
+  background: linear-gradient(to bottom, rgba(255,0,51,0), #ff0033);
+  animation: meteor var(--meteor-duration, 4s) linear infinite;
+  animation-delay: var(--meteor-delay, 0s);
+  top: var(--meteor-top, 10%);
+  left: var(--meteor-left, 30%);
+  opacity: 0;
+  border-radius: 9999px;
+}
+
+/* Ticker / news scroll at bottom */
+.ticker-wrap {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-inner {
+  display: inline-block;
+  animation: ticker 30s linear infinite;
+}
+
+/* Glowing divider */
+.neon-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--neon-red),
+    var(--neon-magenta),
+    var(--neon-cyan),
+    transparent
+  );
+  box-shadow: 0 0 10px var(--neon-red), 0 0 20px rgba(255, 0, 51, 0.3);
+}
+
+/* Border beam: animated glowing border */
+.border-beam-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.border-beam-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 90deg at 50% 50%,
+    var(--neon-red),
+    var(--neon-magenta),
+    var(--neon-cyan),
+    var(--neon-red)
+  );
+  animation: border-beam 3s linear infinite;
+  z-index: -1;
+}
+
+/* Typing cursor blink */
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typing-cursor::after {
+  content: '|';
+  color: var(--neon-red);
+  animation: cursor-blink 1s ease-in-out infinite;
+  margin-left: 2px;
+}
+
+/* Glow pulse on card hover */
+.card-hover-glow {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card-hover-glow:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow:
+    0 0 20px rgba(255, 0, 51, 0.4),
+    0 0 40px rgba(255, 0, 51, 0.2),
+    0 20px 40px rgba(0, 0, 0, 0.8);
+}
+
+/* Perspective 3D tilt on card */
+.perspective-card {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Stats counter glow */
+.stat-number {
+  font-family: var(--font-orbitron);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 20px currentColor;
+}
+
+/* Holographic shimmer on poster */
+.holo-poster {
+  position: relative;
+}
+
+.holo-poster::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    transparent 30%,
+    rgba(0, 247, 255, 0.1) 45%,
+    rgba(255, 0, 51, 0.08) 55%,
+    transparent 70%
+  );
+  background-size: 250% 250%;
+  animation: shimmer-sweep 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Featured badge pulse ring */
+@keyframes ring-pulse {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.ring-pulse::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--neon-red);
+  border-radius: inherit;
+  animation: ring-pulse 2s ease-out infinite;
+}

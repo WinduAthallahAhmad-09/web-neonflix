@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { getNowShowing, Movie } from "@/data/movies";
 import { MovieCard } from "./MovieCard";
-import { GlitchText } from "@/components/ui/GlitchText";
 import { soundFx } from "@/lib/soundFx";
-import { Grid, Flame, Filter } from "lucide-react";
+import { Flame, Sparkles } from "lucide-react";
 
 export function NowShowingSection() {
   const allMovies = getNowShowing();
@@ -24,27 +23,21 @@ export function NowShowingSection() {
   };
 
   return (
-    <section id="now-showing" className="py-16 px-4 sm:px-8 max-w-7xl mx-auto w-full relative z-10">
-      {/* Tactical Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 pb-4 border-b border-dark-border gap-4">
+    <section id="now-showing" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto w-full relative z-10">
+      {/* Clean & Sleek Section Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-5 border-b border-white/10 gap-6">
         <div>
-          <div className="flex items-center gap-2 text-neon-red font-mono text-xs font-bold tracking-widest uppercase mb-1">
-            <Flame size={14} className="animate-pulse" />
-            CURRENT SIMULATION FEED // JAKARTA
+          <div className="flex items-center gap-2 text-neon-red font-mono text-xs font-semibold tracking-widest uppercase mb-2">
+            <Flame size={14} className="animate-pulse text-neon-red" />
+            JAKARTA THEATERS // LIVE SELECTION
           </div>
-          <GlitchText
-            text="NOW SHOWING"
-            as="h2"
-            intensity="low"
-            className="text-3xl sm:text-4xl font-extrabold text-white tracking-wider drop-shadow-[0_0_15px_#ff0033]"
-          />
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[family-name:var(--font-orbitron)] font-black text-white tracking-tight">
+            NOW SHOWING
+          </h2>
         </div>
 
-        {/* Filter Terminals */}
+        {/* Clean Pill Filter Tabs (Rounded Full) */}
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs font-mono text-gray-500 flex items-center gap-1">
-            <Filter size={12} /> FILTER:
-          </span>
           {genres.map((g) => {
             const isSelected = selectedGenre === g;
             return (
@@ -52,10 +45,10 @@ export function NowShowingSection() {
                 key={g}
                 onClick={() => handleFilter(g)}
                 onMouseEnter={() => soundFx.playHover()}
-                className={`px-3 py-1 text-xs font-mono uppercase tracking-wider transition-all duration-200 border cursor-pointer ${
+                className={`px-4 py-1.5 text-xs font-semibold tracking-wider transition-all duration-200 rounded-full cursor-pointer border ${
                   isSelected
-                    ? "bg-neon-red/20 border-neon-red text-white shadow-[0_0_10px_rgba(255,0,51,0.5)] font-bold"
-                    : "bg-dark-card border-dark-border text-gray-400 hover:border-gray-500 hover:text-white"
+                    ? "bg-neon-red border-neon-red text-white shadow-[0_0_15px_rgba(255,0,51,0.5)]"
+                    : "bg-dark-card/80 border-white/10 text-gray-300 hover:border-white/30 hover:text-white hover:bg-white/5"
                 }`}
               >
                 {g}
@@ -65,10 +58,10 @@ export function NowShowingSection() {
         </div>
       </div>
 
-      {/* Grid of Simulation Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredMovies.map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
+      {/* Spacious Grid of Clean Rounded Movie Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 sm:gap-8">
+        {filteredMovies.map((movie, i) => (
+          <MovieCard key={movie.id} movie={movie} index={i} />
         ))}
       </div>
     </section>

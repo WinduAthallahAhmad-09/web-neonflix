@@ -20,7 +20,7 @@ export const NeonButton = React.forwardRef<HTMLButtonElement, NeonButtonProps>(
       variant = "primary",
       size = "md",
       disabled = false,
-      isCyberClip = true,
+      isCyberClip = false,
       onClick,
       onMouseEnter,
       ...props
@@ -28,20 +28,20 @@ export const NeonButton = React.forwardRef<HTMLButtonElement, NeonButtonProps>(
     ref
   ) => {
     const sizeClasses = {
-      sm: "px-3 py-1.5 text-xs",
-      md: "px-5 py-2.5 text-sm",
-      lg: "px-8 py-3.5 text-base tracking-wider",
+      sm: "px-3.5 py-1.5 text-xs rounded-full",
+      md: "px-6 py-2.5 text-sm rounded-full",
+      lg: "px-8 py-3.5 text-base tracking-wider rounded-full",
     };
 
     const variantClasses = {
       primary:
-        "bg-neon-red text-white font-bold border-neon-red hover:bg-neon-red/90 hover:shadow-[0_0_20px_#ff0033] active:scale-95",
+        "bg-neon-red text-white font-bold border-neon-red hover:bg-neon-red/90 hover:shadow-[0_0_25px_rgba(255,0,51,0.6)] active:scale-95",
       secondary:
-        "bg-transparent text-neon-cyan border-neon-cyan/70 hover:bg-neon-cyan/15 hover:shadow-[0_0_20px_rgba(0,247,255,0.5)] active:scale-95",
+        "bg-white/5 text-neon-cyan border-white/20 hover:border-neon-cyan hover:bg-neon-cyan/15 hover:shadow-[0_0_20px_rgba(0,247,255,0.4)] active:scale-95",
       danger:
         "bg-neon-magenta text-white font-bold border-neon-magenta hover:bg-neon-magenta/90 hover:shadow-[0_0_20px_#ff2e77] active:scale-95",
       ghost:
-        "bg-dark-card/60 text-gray-300 border-dark-border hover:text-white hover:border-gray-500 hover:bg-white/5 active:scale-95",
+        "bg-dark-card/60 text-gray-300 border-white/10 hover:text-white hover:border-white/30 hover:bg-white/5 active:scale-95",
       gold:
         "bg-neon-yellow text-black font-bold border-neon-yellow hover:shadow-[0_0_20px_#f5ff00] active:scale-95",
       cyber:
@@ -72,7 +72,7 @@ export const NeonButton = React.forwardRef<HTMLButtonElement, NeonButtonProps>(
         whileTap={disabled ? {} : { scale: 0.98 }}
         className={cn(
           "relative inline-flex items-center justify-center font-[family-name:var(--font-orbitron)] font-semibold transition-all duration-200 border cursor-pointer select-none",
-          isCyberClip && "cyber-clip-sm",
+          isCyberClip ? "cyber-clip-sm" : "rounded-full",
           sizeClasses[size],
           variantClasses[variant],
           disabled && "opacity-40 cursor-not-allowed hover:shadow-none active:scale-100",
