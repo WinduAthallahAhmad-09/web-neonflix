@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlitchText } from "../ui/GlitchText";
 import { useUserStore } from "@/store/userStore";
 import { soundFx } from "@/lib/soundFx";
-import { Menu, X, Shield, Film, Flame } from "lucide-react";
+import { Menu, X, Shield, Film, Flame, Clapperboard, Award } from "lucide-react";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,8 +17,8 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: "EXPLORE", href: "/", icon: Film },
-    { name: "SIMULATIONS", href: "/#now-showing", icon: Flame },
-    { name: "OPERATOR", href: "/profile", icon: Shield },
+    { name: "MOVIE LIST", href: "/#now-showing", icon: Clapperboard },
+    { name: "REWARD", href: "/profile", icon: Award },
   ];
 
   return (
