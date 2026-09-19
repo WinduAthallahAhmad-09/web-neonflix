@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { getNowShowing, Movie } from "@/data/movies";
-import { MovieCard } from "./MovieCard";
+import { ExpandingCinemaShelf } from "./ExpandingCinemaShelf";
 import { SlidingTabs, SlidingTabOption } from "@/components/ui/SlidingTabs";
 import { Flame, Film, Sparkles, Zap, Compass } from "lucide-react";
 
@@ -46,12 +46,8 @@ export function NowShowingSection() {
         />
       </div>
 
-      {/* Spacious Grid of Clean Rounded Movie Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-7 sm:gap-8">
-        {filteredMovies.map((movie, i) => (
-          <MovieCard key={movie.id} movie={movie} index={i} />
-        ))}
-      </div>
+      {/* Interactive Apple TV / Netflix Expanding Cinema Shelf */}
+      <ExpandingCinemaShelf movies={filteredMovies} />
     </section>
   );
 }
