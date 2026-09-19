@@ -128,6 +128,7 @@ export function ShowtimeSelector({ movie }: ShowtimeSelectorProps) {
 
   return (
     <div
+      id="showtime-matrix-section"
       ref={containerRef}
       className="max-w-7xl mx-auto px-4 sm:px-8 py-12 relative z-10"
     >

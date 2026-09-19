@@ -21,7 +21,10 @@ import {
   Crosshair,
   User,
   Shield,
+  Ticket,
 } from "lucide-react";
+import { Holographic3DPoster } from "./Holographic3DPoster";
+import { CinemaDossierTabs } from "./CinemaDossierTabs";
 
 interface MovieHeroProps {
   movie: Movie;
@@ -29,6 +32,14 @@ interface MovieHeroProps {
 
 export function MovieHero({ movie }: MovieHeroProps) {
   const [showTrailer, setShowTrailer] = useState(false);
+
+  const handleBookShowtime = () => {
+    soundFx.playSelect(true);
+    const el = document.getElementById("showtime-matrix-section");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   return (
     <div className="relative w-full min-h-[85vh] flex items-center pt-28 pb-16 overflow-hidden select-none">
@@ -53,13 +64,13 @@ export function MovieHero({ movie }: MovieHeroProps) {
 
       {/* --- Main Content Grid Container --- */}
       <div className="container mx-auto px-4 sm:px-8 z-10 relative">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Left Column: Movie Intel & Synopses (7 Cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          {/* Left Column: Movie Intel & Dossier Tabs (7-8 Cols) */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="lg:col-span-8 flex flex-col items-start gap-4"
+            className="lg:col-span-7 xl:col-span-8 flex flex-col items-start gap-5"
           >
             {/* Top Status Telemetry Tag */}
             <div className="flex flex-wrap items-center gap-2 text-xs font-mono">
@@ -74,7 +85,20 @@ export function MovieHero({ movie }: MovieHeroProps) {
               </span>
             </div>
 
-            {/* Genre & Specs Badges */}
+            {/* Title with Ultra-HD Glitch Text */}
+            <div className="space-y-1">
+              <GlitchText
+                text={movie.title}
+                as="h1"
+                intensity="medium"
+                className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-wider drop-shadow-[0_0_30px_rgba(255,0,51,0.6)]"
+              />
+              <p className="font-[family-name:var(--font-orbitron)] text-base sm:text-lg text-neon-magenta tracking-widest uppercase">
+                // {movie.tagline}
+              </p>
+            </div>
+
+            {/* Genre & Rating Badges */}
             <div className="flex flex-wrap items-center gap-2">
               {movie.genre.map((g, idx) => (
                 <NeonBadge
@@ -95,81 +119,19 @@ export function MovieHero({ movie }: MovieHeroProps) {
               </div>
             </div>
 
-            {/* Title with Ultra-HD Glitch Text */}
-            <div className="space-y-1">
-              <GlitchText
-                text={movie.title}
-                as="h1"
-                intensity="medium"
-                className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white tracking-wider drop-shadow-[0_0_30px_rgba(255,0,51,0.6)]"
-              />
-              <p className="font-[family-name:var(--font-orbitron)] text-base sm:text-xl text-neon-magenta tracking-widest uppercase">
-                // {movie.tagline}
-              </p>
-            </div>
+            {/* Cinema Dossier Tabs (Interactive Story, Full Cast & Crew, Specs) */}
+            <CinemaDossierTabs movie={movie} />
 
-            {/* Synopsis Briefing Box */}
-            <div className="relative p-5 bg-dark-card/85 border-l-4 border-neon-red border-y border-r border-dark-border backdrop-blur-xl max-w-3xl text-gray-200 text-sm sm:text-base leading-relaxed shadow-[0_0_20px_rgba(0,0,0,0.8)]">
-              <div className="text-[9px] font-mono text-neon-red tracking-widest mb-1.5 flex items-center gap-1.5">
-                <Crosshair size={12} /> [SIMULATION_SYNOPSIS_LOG]
-              </div>
-              {movie.synopsis}
-            </div>
-
-            {/* Director & Cast Chips */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-2xl text-xs font-mono">
-              <div className="p-3 bg-dark-surface/90 border border-dark-border flex items-center gap-3">
-                <div className="w-8 h-8 rounded bg-neon-cyan/10 border border-neon-cyan/40 flex items-center justify-center text-neon-cyan">
-                  <User size={16} />
-                </div>
-                <div>
-                  <div className="text-[9px] text-gray-400">DIRECTOR / ARCHITECT</div>
-                  <div className="text-white font-bold">{movie.director}</div>
-                </div>
-              </div>
-
-              <div className="p-3 bg-dark-surface/90 border border-dark-border flex items-center gap-3">
-                <div className="w-8 h-8 rounded bg-neon-magenta/10 border border-neon-magenta/40 flex items-center justify-center text-neon-magenta">
-                  <Shield size={16} />
-                </div>
-                <div className="overflow-hidden">
-                  <div className="text-[9px] text-gray-400">OPERATIVE CAST</div>
-                  <div className="text-white font-bold truncate">
-                    {movie.cast.join(", ")}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Audio & Visual Specs Badges */}
-            <div className="flex flex-wrap items-center gap-2 pt-1 font-mono text-[10px]">
-              <span className="text-gray-400 flex items-center gap-1">
-                <Tv size={12} className="text-neon-cyan" /> VISUAL:
-              </span>
-              {(movie.visualSpecs || ["IMAX 3D 4K", "DOLBY VISION", "120FPS"]).map((v) => (
-                <span
-                  key={v}
-                  className="px-2 py-0.5 bg-dark-surface border border-neon-cyan/30 text-neon-cyan font-bold"
-                >
-                  {v}
-                </span>
-              ))}
-
-              <span className="text-gray-400 flex items-center gap-1 ml-2">
-                <Volume2 size={12} className="text-neon-magenta" /> AUDIO:
-              </span>
-              {(movie.audioSpecs || ["DOLBY ATMOS 7.1.4", "DTS:X"]).map((a) => (
-                <span
-                  key={a}
-                  className="px-2 py-0.5 bg-dark-surface border border-neon-magenta/30 text-neon-magenta font-bold"
-                >
-                  {a}
-                </span>
-              ))}
-            </div>
-
-            {/* Action CTA Button */}
+            {/* Action CTAs */}
             <div className="flex flex-wrap gap-4 pt-2">
+              <NeonButton
+                variant="primary"
+                size="lg"
+                onClick={handleBookShowtime}
+              >
+                <Ticket size={18} />
+                BOOK SHOWTIME & SEATS
+              </NeonButton>
               <NeonButton
                 variant="secondary"
                 size="lg"
@@ -184,53 +146,20 @@ export function MovieHero({ movie }: MovieHeroProps) {
             </div>
           </motion.div>
 
-          {/* Right Column: 3D Holographic Poster Cartridge Pod (5 Cols) */}
+          {/* Right Column: 3D Holographic Poster Cartridge Pod (5-4 Cols) */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="lg:col-span-4 flex flex-col items-center justify-center"
+            className="lg:col-span-5 xl:col-span-4 flex flex-col items-center justify-center"
           >
-            <div className="relative p-3 bg-dark-card border-2 border-neon-red/60 rounded-none shadow-[0_0_35px_rgba(255,0,51,0.35)] group">
-              {/* Top Frame Telemetry */}
-              <div className="flex justify-between items-center text-[10px] font-mono text-gray-400 mb-2 border-b border-dark-border pb-1.5">
-                <span className="text-neon-red font-bold flex items-center gap-1">
-                  <Radio size={10} className="animate-ping" /> HOLO_POSTER_HD
-                </span>
-                <span className="text-neon-green">4K ULTRA</span>
-              </div>
-
-              {/* Poster 4K Container */}
-              <div className="relative w-64 sm:w-72 h-96 sm:h-[420px] overflow-hidden border border-dark-border bg-black">
-                <Image
-                  src={movie.posterUrl}
-                  alt={movie.title}
-                  fill
-                  priority
-                  unoptimized
-                  className="object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-100 contrast-110"
-                />
-                {/* Laser scan line passing over poster on hover */}
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-neon-red/20 to-transparent h-16 animate-[scanline_3s_linear_infinite] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-dark-bg/90 via-transparent to-transparent opacity-80" />
-
-                {/* Bottom Overlay Label */}
-                <div className="absolute bottom-3 left-3 right-3 p-2.5 bg-dark-bg/95 border border-neon-red/40 text-center">
-                  <div className="text-xs font-mono font-bold text-white">
-                    {movie.title}
-                  </div>
-                  <div className="text-[10px] font-mono text-neon-cyan">
-                    ID: #{movie.id.toUpperCase()} // RELEASED {movie.releaseDate}
-                  </div>
-                </div>
-              </div>
-
-              {/* Bottom Frame Coordinates */}
-              <div className="flex justify-between items-center text-[9px] font-mono text-gray-500 mt-2">
-                <span>COORD: JKT-GRID</span>
-                <span className="text-neon-magenta">STATUS: ACTIVE</span>
-              </div>
-            </div>
+            <Holographic3DPoster
+              movie={movie}
+              onPlayTrailer={() => {
+                soundFx.playSelect(true);
+                setShowTrailer(true);
+              }}
+            />
           </motion.div>
         </div>
       </div>
