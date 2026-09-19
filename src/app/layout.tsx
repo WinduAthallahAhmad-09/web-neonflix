@@ -1,5 +1,13 @@
 import type { Metadata } from "next";
-import { Inter, Orbitron, JetBrains_Mono } from "next/font/google";
+import {
+  Inter,
+  Orbitron,
+  JetBrains_Mono,
+  Space_Grotesk,
+  Rajdhani,
+  Plus_Jakarta_Sans,
+  Geist_Mono,
+} from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -23,6 +31,30 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600", "700"],
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+const rajdhani = Rajdhani({
+  variable: "--font-rajdhani",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
 export const metadata: Metadata = {
   title: "NEONFLIX // Cyberpunk Game Cinema Matrix",
   description:
@@ -37,9 +69,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${orbitron.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${orbitron.variable} ${jetbrainsMono.variable} ${spaceGrotesk.variable} ${rajdhani.variable} ${plusJakarta.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-dark-bg text-white font-[family-name:var(--font-inter)] selection:bg-neon-red/30 selection:text-white relative overflow-x-hidden">
+      <body className="min-h-full flex flex-col bg-dark-bg text-white font-[family-name:var(--font-plus-jakarta)] selection:bg-neon-red/30 selection:text-white relative overflow-x-hidden">
         {/* 3D WebGL Three.js Perspective Horizon Grid & City Background */}
         <CyberCityCanvas />
 

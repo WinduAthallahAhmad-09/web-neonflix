@@ -13,6 +13,7 @@ import { BookingSummary } from "@/components/booking/BookingSummary";
 import { ProgressBar } from "@/components/ui/ProgressBar";
 import { formatCurrency } from "@/lib/utils";
 import { soundFx } from "@/lib/soundFx";
+import { SpotlightShowtimeCard } from "./SpotlightShowtimeCard";
 import {
   Calendar,
   MapPin,
@@ -144,28 +145,38 @@ export function ShowtimeSelector({ movie }: ShowtimeSelectorProps) {
       {/* ── PHASE 01: SELECT TIME & THEATER MATRIX ── */}
       <section id="showtime-matrix-section">
         {/* Header */}
-        <div className="flex items-center gap-3 mb-8 pb-4 border-b border-dark-border">
-          <div className="w-3 h-8 bg-neon-red shadow-[0_0_12px_#ff0033]" />
+        <div className="flex items-center gap-3.5 mb-8 pb-4 border-b border-white/10">
+          <div className="w-2.5 h-9 rounded-sm bg-neon-red shadow-[0_0_15px_#ff0033]" />
           <div>
-            <div className="text-[10px] font-mono text-neon-red uppercase tracking-widest">
-              PHASE 01 // DEPLOYMENT SCHEDULER
+            <div className="text-[10px] font-[family-name:var(--font-space-grotesk)] font-bold text-neon-red uppercase tracking-widest flex items-center gap-1.5">
+              <Sparkles size={12} /> PHASE 01 // DEPLOYMENT SCHEDULER
             </div>
-            <h2 className="text-2xl sm:text-3xl font-[family-name:var(--font-orbitron)] font-extrabold text-white tracking-wider">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-[family-name:var(--font-space-grotesk)] font-extrabold text-white tracking-wide">
               SELECT TIME & THEATER MATRIX
             </h2>
           </div>
         </div>
 
-        {/* 1. Date Selector (Tactical Cartridge Cards) */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-3">
-            <Calendar size={14} className="text-neon-cyan" />
-            <span>MISSION DATE [CYCLE]:</span>
+        {/* 1. Date Selector (Horizontal Capsule Slider with Framer Motion layoutId) */}
+        <div className="mb-9">
+          <div className="flex items-center justify-between text-xs font-[family-name:var(--font-space-grotesk)] text-gray-400 mb-3">
+            <div className="flex items-center gap-2">
+              <Calendar size={14} className="text-neon-cyan" />
+              <span className="tracking-wider uppercase font-semibold text-gray-300">
+                MISSION DATE [CYCLE]
+              </span>
+            </div>
+            <span className="text-[11px] font-[family-name:var(--font-geist-mono)] text-neon-cyan">
+              7-DAY CYCLE WINDOW
+            </span>
           </div>
-          <div className="flex overflow-x-auto gap-3 pb-3 no-scrollbar">
-            {dates.map((date) => {
+
+          <div className="flex items-center gap-2.5 overflow-x-auto pb-3 pt-1 px-1 no-scrollbar">
+            {dates.map((date, idx) => {
               const d = new Date(date);
               const isSelected = selectedDate === date;
+              const isToday = idx === 0;
+
               return (
                 <button
                   key={date}
@@ -175,18 +186,46 @@ export function ShowtimeSelector({ movie }: ShowtimeSelectorProps) {
                     setSelectedDate(date);
                   }}
                   onMouseEnter={() => soundFx.playHover()}
-                  className={`flex-shrink-0 px-5 py-2.5 rounded-lg border transition-all cursor-pointer text-left font-[family-name:var(--font-jetbrains)] ${
-                    isSelected
-                      ? "bg-neon-red/20 border-neon-red text-white shadow-[0_0_15px_rgba(255,0,51,0.6)]"
-                      : "bg-dark-card border-dark-border text-gray-400 hover:border-gray-500 hover:text-white"
-                  }`}
+                  className="relative flex-shrink-0 px-4 py-3 rounded-xl cursor-pointer text-center outline-none group select-none transition-transform active:scale-95 min-w-[72px]"
                 >
-                  <div className="text-[10px] uppercase text-neon-red font-bold">
-                    {d.toLocaleDateString("en-US", { weekday: "short" })}
-                  </div>
-                  <div className="text-base font-bold text-white">
-                    {d.getDate()}{" "}
-                    {d.toLocaleDateString("en-US", { month: "short" })}
+                  {/* Sliding Pill Active Background via Framer Motion layoutId */}
+                  {isSelected && (
+                    <motion.div
+                      layoutId="activeDatePill"
+                      className="absolute inset-0 rounded-xl bg-gradient-to-b from-neon-red/30 via-neon-red/15 to-neon-red/5 border border-neon-red shadow-[0_0_22px_rgba(255,0,51,0.45)] z-0"
+                      transition={{ type: "spring", stiffness: 440, damping: 32 }}
+                    />
+                  )}
+
+                  {/* Hover Glow on Inactive Cards */}
+                  {!isSelected && (
+                    <div className="absolute inset-0 rounded-xl bg-white/[0.03] border border-white/[0.08] group-hover:border-white/20 group-hover:bg-white/[0.06] transition-colors z-0" />
+                  )}
+
+                  {/* Content */}
+                  <div className="relative z-10 flex flex-col items-center gap-0.5">
+                    <div
+                      className={`text-[10px] font-[family-name:var(--font-space-grotesk)] font-bold tracking-wider uppercase flex items-center gap-1 ${
+                        isSelected ? "text-neon-red" : "text-gray-400 group-hover:text-gray-200"
+                      }`}
+                    >
+                      {isToday ? (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-neon-green animate-pulse" />
+                          TODAY
+                        </>
+                      ) : (
+                        d.toLocaleDateString("en-US", { weekday: "short" })
+                      )}
+                    </div>
+
+                    <div className="text-2xl font-[family-name:var(--font-rajdhani)] font-bold text-white leading-tight">
+                      {d.getDate()}
+                    </div>
+
+                    <div className="text-[10px] font-[family-name:var(--font-plus-jakarta)] font-medium text-gray-400">
+                      {d.toLocaleDateString("en-US", { month: "short" })}
+                    </div>
                   </div>
                 </button>
               );
@@ -194,115 +233,108 @@ export function ShowtimeSelector({ movie }: ShowtimeSelectorProps) {
           </div>
         </div>
 
-        {/* 2. Cinema Hub Selector */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs font-mono text-gray-400 mb-3">
+        {/* 2. Cinema Hub Selector (Glassmorphic Cards + Live Pulse + Studio Badges) */}
+        <div className="mb-9">
+          <div className="flex items-center gap-2 text-xs font-[family-name:var(--font-space-grotesk)] text-gray-400 mb-3">
             <MapPin size={14} className="text-neon-magenta" />
-            <span>TARGET JAKARTA SECTOR:</span>
+            <span className="tracking-wider uppercase font-semibold text-gray-300">
+              TARGET JAKARTA SECTOR [THEATER]
+            </span>
           </div>
-          <div className="flex flex-wrap gap-3">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {cinemas.map((cinema) => {
               const isSelected = selectedCinema === cinema.id;
+
               return (
-                <button
+                <div
                   key={cinema.id}
-                  type="button"
                   onClick={() => {
                     soundFx.playClick();
                     setSelectedCinema(cinema.id);
                   }}
                   onMouseEnter={() => soundFx.playHover()}
-                  className={`px-4 py-2 rounded-lg border font-[family-name:var(--font-orbitron)] text-xs tracking-wider transition-all cursor-pointer flex items-center gap-2 ${
+                  className={`group relative p-4 rounded-xl border cursor-pointer transition-all duration-200 select-none ${
                     isSelected
-                      ? "border-neon-cyan text-neon-cyan bg-neon-cyan/15 shadow-[0_0_15px_rgba(0,247,255,0.4)] font-bold"
-                      : "border-dark-border text-gray-400 bg-dark-card hover:text-white hover:border-gray-600"
+                      ? "bg-neon-cyan/10 border-neon-cyan shadow-[0_0_20px_rgba(0,247,255,0.25)]"
+                      : "bg-white/[0.02] border-white/10 hover:border-white/20 hover:bg-white/[0.04]"
                   }`}
                 >
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      isSelected ? "bg-neon-cyan animate-ping" : "bg-gray-600"
-                    }`}
-                  />
-                  {cinema.name}
-                </button>
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <div className="flex items-center gap-2">
+                      <span className="relative flex h-2 w-2">
+                        {isSelected && (
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon-cyan opacity-75" />
+                        )}
+                        <span
+                          className={`relative inline-flex rounded-full h-2 w-2 ${
+                            isSelected ? "bg-neon-cyan" : "bg-gray-600"
+                          }`}
+                        />
+                      </span>
+                      <h4 className="text-sm font-[family-name:var(--font-space-grotesk)] font-bold text-white group-hover:text-neon-cyan transition-colors">
+                        {cinema.name}
+                      </h4>
+                    </div>
+
+                    <MapPin
+                      size={14}
+                      className={isSelected ? "text-neon-cyan" : "text-gray-500"}
+                    />
+                  </div>
+
+                  <p className="text-[11px] font-[family-name:var(--font-plus-jakarta)] text-gray-400 mb-2.5 line-clamp-1">
+                    {cinema.location} • {cinema.studios.length} Studios Active
+                  </p>
+
+                  {/* Studio Technology Badges */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {cinema.facilities
+                      .filter((f) =>
+                        ["IMAX", "Dolby Atmos", "4DX", "VIP Lounge"].includes(f)
+                      )
+                      .map((facility) => (
+                        <span
+                          key={facility}
+                          className="px-2 py-0.5 rounded text-[9px] font-[family-name:var(--font-geist-mono)] font-semibold uppercase tracking-wider bg-white/5 border border-white/10 text-gray-300"
+                        >
+                          {facility}
+                        </span>
+                      ))}
+                  </div>
+                </div>
               );
             })}
           </div>
         </div>
 
-        {/* 3. Showtime Slots Matrix */}
+        {/* 3. Showtime Slots Matrix with Cursor Spotlight Cards */}
         <div>
-          <div className="flex items-center justify-between text-xs font-mono text-gray-400 mb-4">
+          <div className="flex items-center justify-between text-xs font-[family-name:var(--font-space-grotesk)] text-gray-400 mb-4">
             <div className="flex items-center gap-2">
               <Monitor size={14} className="text-neon-yellow" />
-              <span>AVAILABLE SESSIONS:</span>
+              <span className="tracking-wider uppercase font-semibold text-gray-300">
+                AVAILABLE SESSIONS
+              </span>
             </div>
-            <span className="text-neon-green font-bold">
+            <span className="text-[11px] font-[family-name:var(--font-geist-mono)] text-neon-green font-bold flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-neon-green animate-pulse" />
               {showtimes.length} SESSIONS ONLINE
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             {showtimes.length > 0 ? (
-              showtimes.map((st) => {
-                const isSelected = selectedShowtime?.id === st.id;
-                const availableSeats = st.availableSeats;
-                const occupancyPct = Math.round(
-                  ((st.totalSeats - availableSeats) / st.totalSeats) * 100
-                );
-
-                return (
-                  <div
-                    key={st.id}
-                    onClick={() => handleSelectShowtime(st)}
-                    onMouseEnter={() => soundFx.playHover()}
-                    className={`p-4 rounded-xl bg-dark-card border cursor-pointer transition-all duration-300 relative group select-none ${
-                      isSelected
-                        ? "border-neon-red shadow-[0_0_25px_rgba(255,0,51,0.7)] bg-neon-red/15 scale-[1.03] ring-1 ring-neon-red"
-                        : "border-dark-border hover:border-white/30 hover:bg-white/5 hover:scale-[1.01]"
-                    }`}
-                  >
-                    {/* Active Selected Indicator Badge */}
-                    {isSelected && (
-                      <div className="absolute -top-2.5 right-3 px-2 py-0.5 rounded-full bg-neon-red text-white text-[9px] font-mono font-bold uppercase shadow-[0_0_10px_#ff0033] flex items-center gap-1">
-                        <CheckCircle size={10} />
-                        ACTIVE
-                      </div>
-                    )}
-
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="text-3xl font-[family-name:var(--font-orbitron)] font-extrabold text-white group-hover:text-neon-red transition-colors">
-                        {st.time}
-                      </div>
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-dark-surface border border-neon-cyan/60 text-neon-cyan font-bold">
-                        {st.studioType}
-                      </span>
-                    </div>
-
-                    <div className="text-sm font-mono text-neon-cyan font-bold mb-3">
-                      {formatCurrency(st.price)}
-                    </div>
-
-                    {/* Seat Occupancy Meter */}
-                    <div className="space-y-1 pt-2 border-t border-dark-border/50">
-                      <div className="flex justify-between text-[10px] font-mono text-gray-400">
-                        <span>OCCUPANCY</span>
-                        <span className="text-white font-bold">{occupancyPct}%</span>
-                      </div>
-                      <ProgressBar
-                        value={st.totalSeats - availableSeats}
-                        max={st.totalSeats}
-                        showPercentage={false}
-                      />
-                      <div className="text-[9px] font-mono text-neon-green text-right">
-                        {availableSeats} SEATS OPEN
-                      </div>
-                    </div>
-                  </div>
-                );
-              })
+              showtimes.map((st) => (
+                <SpotlightShowtimeCard
+                  key={st.id}
+                  showtime={st}
+                  isSelected={selectedShowtime?.id === st.id}
+                  onSelect={() => handleSelectShowtime(st)}
+                />
+              ))
             ) : (
-              <div className="col-span-full p-8 text-center border border-dashed border-dark-border text-gray-500 font-mono rounded-xl">
+              <div className="col-span-full p-8 text-center border border-dashed border-white/10 text-gray-500 font-mono rounded-xl bg-white/[0.01]">
                 // NO TRANSMISSIONS FOR SELECTED PARAMETERS. TRY ANOTHER DATE OR SECTOR.
               </div>
             )}
@@ -327,18 +359,18 @@ export function ShowtimeSelector({ movie }: ShowtimeSelectorProps) {
 
               {/* Phase 02 Header matching Image 2 */}
               <div className="text-center mb-10 relative">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neon-red/15 border border-neon-red/40 text-neon-red text-[11px] font-mono font-bold tracking-widest uppercase mb-3 shadow-[0_0_20px_rgba(255,0,51,0.35)]">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neon-red/15 border border-neon-red/40 text-neon-red text-[11px] font-[family-name:var(--font-space-grotesk)] font-bold tracking-widest uppercase mb-3 shadow-[0_0_20px_rgba(255,0,51,0.35)]">
                   <Armchair size={14} className="animate-pulse" />
                   PHASE 02 // SEAT MATRIX ALLOCATION
                 </div>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[family-name:var(--font-orbitron)] font-black text-white tracking-tight drop-shadow-[0_0_25px_rgba(255,0,51,0.6)]">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[family-name:var(--font-space-grotesk)] font-extrabold text-white tracking-tight drop-shadow-[0_0_25px_rgba(255,0,51,0.6)]">
                   SELECT YOUR SEATS
                 </h2>
-                <p className="text-xs sm:text-sm font-mono text-gray-400 mt-2 flex items-center justify-center gap-2">
+                <p className="text-xs sm:text-sm font-[family-name:var(--font-plus-jakarta)] text-gray-400 mt-2 flex items-center justify-center gap-2">
                   <span>Max 6 seats per transaction</span>
                   <span className="text-neon-cyan">•</span>
-                  <span className="text-neon-cyan font-bold">{selectedShowtime.time}</span>
-                  <span className="text-gray-500">[{selectedShowtime.studioType}]</span>
+                  <span className="text-neon-cyan font-bold font-[family-name:var(--font-rajdhani)] text-base">{selectedShowtime.time}</span>
+                  <span className="text-gray-500 font-mono">[{selectedShowtime.studioType}]</span>
                 </p>
               </div>
 
