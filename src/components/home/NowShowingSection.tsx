@@ -3,24 +3,25 @@
 import { useState } from "react";
 import { getNowShowing, Movie } from "@/data/movies";
 import { MovieCard } from "./MovieCard";
-import { soundFx } from "@/lib/soundFx";
-import { Flame, Sparkles } from "lucide-react";
+import { SlidingTabs, SlidingTabOption } from "@/components/ui/SlidingTabs";
+import { Flame, Film, Sparkles, Zap, Compass } from "lucide-react";
+
+const GENRE_TABS: SlidingTabOption[] = [
+  { id: "ALL", label: "ALL", icon: Film },
+  { id: "Sci-Fi", label: "SCI-FI", icon: Sparkles },
+  { id: "Action", label: "ACTION", icon: Flame },
+  { id: "Thriller", label: "THRILLER", icon: Zap },
+  { id: "Adventure", label: "ADVENTURE", icon: Compass },
+];
 
 export function NowShowingSection() {
   const allMovies = getNowShowing();
   const [selectedGenre, setSelectedGenre] = useState<string>("ALL");
 
-  const genres = ["ALL", "Sci-Fi", "Action", "Thriller", "Adventure"];
-
   const filteredMovies =
     selectedGenre === "ALL"
       ? allMovies
       : allMovies.filter((m) => m.genre.includes(selectedGenre));
-
-  const handleFilter = (g: string) => {
-    soundFx.playClick();
-    setSelectedGenre(g);
-  };
 
   return (
     <section id="now-showing" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto w-full relative z-10">
@@ -36,26 +37,13 @@ export function NowShowingSection() {
           </h2>
         </div>
 
-        {/* Clean Pill Filter Tabs (Rounded Full) */}
-        <div className="flex items-center gap-2 flex-wrap">
-          {genres.map((g) => {
-            const isSelected = selectedGenre === g;
-            return (
-              <button
-                key={g}
-                onClick={() => handleFilter(g)}
-                onMouseEnter={() => soundFx.playHover()}
-                className={`px-4 py-1.5 text-xs font-semibold tracking-wider transition-all duration-200 rounded-full cursor-pointer border ${
-                  isSelected
-                    ? "bg-neon-red border-neon-red text-white shadow-[0_0_15px_rgba(255,0,51,0.5)]"
-                    : "bg-dark-card/80 border-white/10 text-gray-300 hover:border-white/30 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                {g}
-              </button>
-            );
-          })}
-        </div>
+        {/* Cyberpunk Sliding Pill Tabs (Matches User Reference Image) */}
+        <SlidingTabs
+          tabs={GENRE_TABS}
+          activeId={selectedGenre}
+          onChange={setSelectedGenre}
+          size="sm"
+        />
       </div>
 
       {/* Spacious Grid of Clean Rounded Movie Cards */}

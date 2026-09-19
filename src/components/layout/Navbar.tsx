@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import { GlitchText } from "../ui/GlitchText";
 import { useUserStore } from "@/store/userStore";
 import { soundFx } from "@/lib/soundFx";
@@ -10,6 +11,7 @@ import { Menu, X, Shield, Film, Flame } from "lucide-react";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [hoveredPath, setHoveredPath] = useState<string | null>(null);
   const pathname = usePathname();
   const { level, xp } = useUserStore();
 
@@ -45,24 +47,69 @@ export const Navbar = () => {
           </div>
         </Link>
 
-        {/* Center: Game Menu Navigation Pills (Like Reference 'EXPLORE' / 'WORKS') */}
-        <nav className="hidden md:flex items-center gap-1.5 p-1 bg-dark-bg/85 backdrop-blur-md border border-neon-red/30 rounded-full shadow-[0_0_20px_rgba(0,0,0,0.8)]">
+        {/* Center: Cyberpunk Sliding Pill Navigation (Matches User Reference Image) */}
+        <nav
+          onMouseLeave={() => setHoveredPath(null)}
+          className="hidden md:flex items-center p-1.5 bg-black/80 backdrop-blur-2xl border border-neon-red/30 rounded-full shadow-[0_0_25px_rgba(0,0,0,0.9),inset_0_1px_1px_rgba(255,255,255,0.12)] relative"
+          role="tablist"
+        >
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
+            const isHovered = hoveredPath === link.href;
+            const Icon = link.icon;
+
             return (
               <Link
                 key={link.name}
                 href={link.href}
                 onClick={() => soundFx.playClick()}
-                onMouseEnter={() => soundFx.playHover()}
-                className={`px-5 py-1.5 rounded-full text-xs font-[family-name:var(--font-orbitron)] font-semibold tracking-wider transition-all duration-200 flex items-center gap-1.5 ${
-                  isActive
-                    ? "bg-neon-red text-white shadow-[0_0_15px_#ff0033] font-bold"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                onMouseEnter={() => {
+                  soundFx.playHover();
+                  setHoveredPath(link.href);
+                }}
+                className={`relative px-5 py-2 rounded-full text-xs font-[family-name:var(--font-orbitron)] font-bold tracking-wider transition-colors duration-200 flex items-center gap-2 cursor-pointer select-none ${
+                  isActive ? "text-white" : "text-gray-400 hover:text-white"
                 }`}
               >
-                <link.icon size={12} className={isActive ? "text-white" : "text-neon-red"} />
-                {link.name}
+                {/* Ghost Hover Pill */}
+                <AnimatePresence>
+                  {isHovered && !isActive && (
+                    <motion.div
+                      layoutId="nav-ghost-pill"
+                      className="absolute inset-0 rounded-full bg-white/[0.08] border border-white/10 z-0"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                    />
+                  )}
+                </AnimatePresence>
+
+                {/* Active Neon-Red Sliding Pill */}
+                {isActive && (
+                  <motion.div
+                    layoutId="nav-active-pill"
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-red-600 via-neon-red to-red-600 shadow-[0_0_22px_#ff0033,inset_0_1px_2px_rgba(255,255,255,0.5)] border border-red-400/50 z-0"
+                    transition={{
+                      type: "spring",
+                      stiffness: 480,
+                      damping: 34,
+                    }}
+                  />
+                )}
+
+                {/* Content */}
+                <span className="relative z-10 flex items-center gap-2 drop-shadow-sm">
+                  <Icon
+                    size={13}
+                    className={
+                      isActive
+                        ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]"
+                        : "text-neon-red group-hover:text-white transition-colors"
+                    }
+                  />
+                  {link.name}
+                </span>
               </Link>
             );
           })}

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Movie } from "@/data/movies";
 import { soundFx } from "@/lib/soundFx";
 import { motion, AnimatePresence } from "framer-motion";
+import { SlidingTabs, SlidingTabOption } from "@/components/ui/SlidingTabs";
 import {
   Volume2,
   VolumeX,
@@ -13,12 +14,14 @@ import {
   Minimize2,
   Play,
   Pause,
-  ChevronLeft,
-  ChevronRight,
   Ticket,
-  Sparkles,
   Star,
   Clock,
+  Film,
+  Shield,
+  Compass,
+  Flame,
+  Zap,
 } from "lucide-react";
 
 import { getYoutubeId } from "@/lib/utils";
@@ -48,16 +51,34 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
   const movie = movies[activeIdx] || movies[0];
   const youtubeId = getYoutubeId(movie.trailerUrl) || TRAILER_IDS[movie.id] || "daXaTug8rL4";
 
-  // Slide navigation
-  const nextSlide = () => {
-    soundFx.playClick();
-    setActiveIdx((prev) => (prev + 1) % movies.length);
+  // Cyberpunk sliding tabs matching user reference image
+  const movieTabs: SlidingTabOption[] = [
+    { id: "spiderman-brand-new-day", label: "SPIDER-MAN", icon: Film },
+    { id: "batman-dark-knight", label: "DARK KNIGHT", icon: Shield },
+    { id: "the-odyssey", label: "ODYSSEY", icon: Compass },
+    { id: "avengers-assemble", label: "AVENGERS", icon: Flame },
+    { id: "cyberpunk-edgerunners", label: "CYBERPUNK", icon: Zap },
+  ];
+
+  const handleSelectMovie = (id: string) => {
+    const idx = movies.findIndex((m) => m.id === id);
+    if (idx !== -1) {
+      setActiveIdx(idx);
+    }
   };
 
-  const prevSlide = () => {
-    soundFx.playClick();
-    setActiveIdx((prev) => (prev - 1 + movies.length) % movies.length);
-  };
+  // Slide navigation with keyboard arrow keys
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        setActiveIdx((prev) => (prev + 1) % movies.length);
+      } else if (e.key === "ArrowLeft") {
+        setActiveIdx((prev) => (prev - 1 + movies.length) % movies.length);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [movies.length]);
 
   // Toggle Sound (send postMessage to YouTube IFrame API)
   const toggleMute = () => {
@@ -197,27 +218,8 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
         </button>
       </div>
 
-      {/* ── Navigation Arrows (Left & Right) ── */}
-      <button
-        onClick={prevSlide}
-        onMouseEnter={() => soundFx.playHover()}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/50 hover:bg-neon-red/80 border border-white/20 hover:border-neon-red text-white flex items-center justify-center backdrop-blur-md transition-all cursor-pointer shadow-lg group-hover:scale-105"
-        title="Previous Trailer"
-      >
-        <ChevronLeft size={24} />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        onMouseEnter={() => soundFx.playHover()}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/50 hover:bg-neon-red/80 border border-white/20 hover:border-neon-red text-white flex items-center justify-center backdrop-blur-md transition-all cursor-pointer shadow-lg group-hover:scale-105"
-        title="Next Trailer"
-      >
-        <ChevronRight size={24} />
-      </button>
-
       {/* ── Bottom-Left Information Overlay (Matches User Reference Image) ── */}
-      <div className="absolute bottom-10 sm:bottom-12 left-6 sm:left-12 z-30 max-w-xl">
+      <div className="absolute bottom-8 sm:bottom-12 left-6 sm:left-12 z-30 max-w-xl">
         <AnimatePresence mode="wait">
           <motion.div
             key={movie.id}
@@ -266,37 +268,29 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
                 {Math.floor(movie.duration / 60)}h {movie.duration % 60}m
               </span>
             </div>
+
+            {/* Mobile Sliding Tabs Selector */}
+            <div className="pt-2 md:hidden max-w-[90vw] overflow-x-auto no-scrollbar">
+              <SlidingTabs
+                tabs={movieTabs}
+                activeId={movie.id}
+                onChange={handleSelectMovie}
+                size="sm"
+                layoutIdPrefix="trailer-hero-mobile"
+              />
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* ── Bottom Carousel Pagination Dots ── */}
-      <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
-        {movies.map((m, i) => (
-          <button
-            key={m.id}
-            onClick={() => {
-              soundFx.playClick();
-              setActiveIdx(i);
-            }}
-            className={`transition-all duration-300 rounded-full cursor-pointer ${
-              i === activeIdx
-                ? "w-8 h-2 bg-neon-red shadow-[0_0_10px_#ff0033]"
-                : "w-2 h-2 bg-white/40 hover:bg-white/70"
-            }`}
-            title={m.title}
-          />
-        ))}
-      </div>
-
-      {/* ── Bottom Active Slide Progress Line ── */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30">
-        <motion.div
-          key={activeIdx}
-          initial={{ width: "0%" }}
-          animate={{ width: "100%" }}
-          transition={{ duration: 15, ease: "linear" }}
-          className="h-full bg-gradient-to-r from-neon-red to-neon-cyan"
+      {/* ── Desktop Cyberpunk Sliding Pill Movie Selector (Matches User Reference Image) ── */}
+      <div className="absolute bottom-6 sm:bottom-10 right-4 sm:right-10 z-30 hidden md:block">
+        <SlidingTabs
+          tabs={movieTabs}
+          activeId={movie.id}
+          onChange={handleSelectMovie}
+          size="sm"
+          layoutIdPrefix="trailer-hero-desktop"
         />
       </div>
     </section>
