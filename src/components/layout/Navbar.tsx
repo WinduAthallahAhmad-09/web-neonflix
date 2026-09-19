@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,6 +12,7 @@ import { Menu, X, Shield, Film, Flame, Clapperboard, Award } from "lucide-react"
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("EXPLORE");
   const pathname = usePathname();
   const { level, xp } = useUserStore();
 
@@ -20,6 +21,50 @@ export const Navbar = () => {
     { name: "MOVIE LIST", href: "/#now-showing", icon: Clapperboard },
     { name: "REWARD", href: "/profile", icon: Award },
   ];
+
+  // Keep activeTab in sync with pathname & scroll position on homepage
+  useEffect(() => {
+    if (pathname === "/profile") {
+      setActiveTab("REWARD");
+      return;
+    }
+
+    if (pathname === "/") {
+      const handleScroll = () => {
+        const nowShowingElem = document.getElementById("now-showing");
+        if (nowShowingElem) {
+          const rect = nowShowingElem.getBoundingClientRect();
+          if (rect.top <= 300) {
+            setActiveTab("MOVIE LIST");
+            return;
+          }
+        }
+        setActiveTab("EXPLORE");
+      };
+
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      handleScroll();
+      return () => window.removeEventListener("scroll", handleScroll);
+    } else {
+      setActiveTab("EXPLORE");
+    }
+  }, [pathname]);
+
+  const handleNavClick = (link: (typeof navLinks)[0], e: React.MouseEvent) => {
+    soundFx.playClick();
+    setActiveTab(link.name);
+
+    if (link.name === "EXPLORE" && pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (link.name === "MOVIE LIST" && pathname === "/") {
+      e.preventDefault();
+      const elem = document.getElementById("now-showing");
+      if (elem) {
+        elem.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 pt-8 pb-3 px-4 sm:px-8 pointer-events-none">
@@ -54,18 +99,18 @@ export const Navbar = () => {
           role="tablist"
         >
           {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            const isHovered = hoveredPath === link.href;
+            const isActive = activeTab === link.name;
+            const isHovered = hoveredPath === link.name;
             const Icon = link.icon;
 
             return (
               <Link
                 key={link.name}
                 href={link.href}
-                onClick={() => soundFx.playClick()}
+                onClick={(e) => handleNavClick(link, e)}
                 onMouseEnter={() => {
                   soundFx.playHover();
-                  setHoveredPath(link.href);
+                  setHoveredPath(link.name);
                 }}
                 className={`relative px-5 py-2 rounded-full text-xs font-[family-name:var(--font-orbitron)] font-bold tracking-wider transition-colors duration-200 flex items-center gap-2 cursor-pointer select-none ${
                   isActive ? "text-white" : "text-gray-400 hover:text-white"
@@ -157,8 +202,8 @@ export const Navbar = () => {
             <Link
               key={link.name}
               href={link.href}
-              onClick={() => {
-                soundFx.playClick();
+              onClick={(e) => {
+                handleNavClick(link, e);
                 setIsOpen(false);
               }}
               className="px-4 py-2.5 text-sm font-[family-name:var(--font-orbitron)] text-gray-300 hover:text-neon-red hover:bg-neon-red/10 border border-transparent hover:border-neon-red/30 transition-all flex items-center gap-2"
