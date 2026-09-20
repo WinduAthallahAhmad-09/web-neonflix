@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,6 +15,10 @@ export const Navbar = () => {
   const [activeTab, setActiveTab] = useState<string>("EXPLORE");
   const pathname = usePathname();
   const { level, xp } = useUserStore();
+
+  // Prevents scroll listener from fighting/jittering with button clicks during smooth scroll
+  const isClickScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const navLinks = [
     { name: "EXPLORE", href: "/", icon: Film },
@@ -32,6 +36,9 @@ export const Navbar = () => {
 
     if (pathname === "/") {
       const handleScroll = () => {
+        // If user recently clicked a tab, let the smooth scroll finish without jitter
+        if (isClickScrollingRef.current) return;
+
         const comingSoonElem = document.getElementById("coming-soon");
         const nowShowingElem = document.getElementById("now-showing");
 
@@ -56,7 +63,10 @@ export const Navbar = () => {
 
       window.addEventListener("scroll", handleScroll, { passive: true });
       handleScroll();
-      return () => window.removeEventListener("scroll", handleScroll);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
+      };
     } else {
       setActiveTab("EXPLORE");
     }
@@ -64,7 +74,18 @@ export const Navbar = () => {
 
   const handleNavClick = (link: (typeof navLinks)[0], e: React.MouseEvent) => {
     soundFx.playClick();
+
+    // Lock scroll listener immediately so the red pill glides smoothly without vibrating
+    isClickScrollingRef.current = true;
     setActiveTab(link.name);
+
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+    // Release lock after smooth scroll animation completes
+    scrollTimeoutRef.current = setTimeout(() => {
+      isClickScrollingRef.current = false;
+    }, 1000);
 
     if (link.name === "EXPLORE" && pathname === "/") {
       e.preventDefault();
@@ -155,9 +176,9 @@ export const Navbar = () => {
                     className="absolute inset-0 rounded-full bg-gradient-to-r from-red-600 via-rose-600 to-red-600 shadow-[0_0_20px_rgba(229,9,20,0.55),inset_0_1px_2px_rgba(255,255,255,0.45)] border border-red-400/50 z-0"
                     transition={{
                       type: "spring",
-                      stiffness: 220,
-                      damping: 26,
-                      mass: 0.8,
+                      stiffness: 260,
+                      damping: 28,
+                      mass: 0.6,
                     }}
                   />
                 )}
