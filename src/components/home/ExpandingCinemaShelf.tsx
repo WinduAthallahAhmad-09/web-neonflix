@@ -21,13 +21,14 @@ interface ExpandingCinemaShelfProps {
  */
 export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
   const [activeId, setActiveId] = useState<string>(movies[0]?.id || "");
+  const currentActiveId = movies.some((m) => m.id === activeId) ? activeId : movies[0]?.id || "";
 
   return (
     <div className="w-full">
       {/* ── Desktop & Tablet: Expanding Flex Shelf ── */}
       <div className="hidden md:flex h-[540px] w-full gap-3.5 items-stretch relative">
         {movies.map((movie) => {
-          const isActive = movie.id === activeId;
+          const isActive = movie.id === currentActiveId;
 
           return (
             <div
@@ -76,7 +77,7 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
               {/* ── EXPANDED STATE (Active Card Content) ── */}
               {isActive && (
                 <div className="relative z-10 h-full p-6 sm:p-8 flex flex-col justify-between">
-                  {/* Top Bar: Ratings, Age, Visual Specs */}
+                  {/* Top Bar: Ratings, Age, Visual Specs, Audio Specs */}
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2">
                       {/* Rating Badge */}
@@ -91,12 +92,19 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
                       </span>
                     </div>
 
-                    {/* Studio Spec Badge */}
-                    {movie.visualSpecs?.[0] && (
-                      <span className="px-3 py-1 rounded-full bg-neon-cyan/15 border border-neon-cyan/40 text-neon-cyan text-[10px] font-mono font-bold tracking-wider uppercase hidden sm:inline">
-                        {movie.visualSpecs[0]}
-                      </span>
-                    )}
+                    {/* Studio & Audio Spec Badges */}
+                    <div className="flex items-center gap-2">
+                      {movie.visualSpecs?.[0] && (
+                        <span className="px-3 py-1 rounded-full bg-neon-cyan/15 border border-neon-cyan/40 text-neon-cyan text-[10px] font-mono font-bold tracking-wider uppercase hidden sm:inline">
+                          {movie.visualSpecs[0]}
+                        </span>
+                      )}
+                      {movie.audioSpecs?.[0] && (
+                        <span className="px-3 py-1 rounded-full bg-white/10 border border-white/20 text-gray-300 text-[10px] font-mono font-bold tracking-wider uppercase hidden lg:inline">
+                          {movie.audioSpecs[0]}
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   {/* Bottom Area: Animated Details & CTA */}
@@ -135,8 +143,8 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
                       {movie.synopsis}
                     </p>
 
-                    {/* Action Buttons */}
-                    <div className="flex items-center gap-3 pt-3">
+                    {/* Action Buttons & Cast/Director Info */}
+                    <div className="flex items-center gap-3 pt-3 flex-wrap">
                       <Link href={`/movies/${movie.id}`}>
                         <button
                           type="button"
@@ -149,9 +157,15 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
                         </button>
                       </Link>
 
-                      <span className="text-[11px] font-mono text-gray-400 hidden sm:inline">
-                        Dir. {movie.director}
-                      </span>
+                      <div className="text-[11px] font-mono text-gray-400 hidden sm:flex items-center gap-2">
+                        <span>Dir. <strong className="text-gray-200">{movie.director}</strong></span>
+                        {movie.cast && movie.cast.length > 0 && (
+                          <>
+                            <span className="text-white/20">•</span>
+                            <span className="line-clamp-1">Starring: <strong className="text-gray-200">{movie.cast.slice(0, 3).join(", ")}</strong></span>
+                          </>
+                        )}
+                      </div>
                     </div>
                   </motion.div>
                 </div>
