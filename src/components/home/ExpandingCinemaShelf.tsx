@@ -45,11 +45,15 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
                   setActiveId(movie.id);
                 }
               }}
-              className={`relative rounded-2xl overflow-hidden cursor-pointer select-none transition-all duration-500 ease-out border ${
+              className={`relative rounded-2xl overflow-hidden cursor-pointer select-none border ${
                 isActive
                   ? "flex-[3.5] lg:flex-[4] border-neon-red shadow-[0_15px_40px_rgba(255,0,51,0.25)] ring-1 ring-neon-red/50"
                   : "flex-1 border-white/10 hover:border-white/30 filter brightness-85 hover:brightness-100 hover:scale-[1.01]"
               }`}
+              style={{
+                transition:
+                  "flex 850ms cubic-bezier(0.16, 1, 0.3, 1), transform 850ms cubic-bezier(0.16, 1, 0.3, 1), border-color 600ms ease, box-shadow 600ms ease, filter 600ms ease",
+              }}
             >
               {/* Background Visual (Backdrop when Active, Poster when Collapsed) */}
               <div className="absolute inset-0 z-0">
@@ -58,9 +62,13 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
                   alt={movie.title}
                   fill
                   unoptimized
-                  className={`object-cover object-center transition-transform duration-700 ease-out ${
+                  className={`object-cover object-center ${
                     isActive ? "scale-105" : "scale-100"
                   }`}
+                  style={{
+                    transition:
+                      "transform 1200ms cubic-bezier(0.16, 1, 0.3, 1), opacity 800ms ease",
+                  }}
                 />
 
                 {/* Cinematic Overlays */}
@@ -78,7 +86,12 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
               {isActive && (
                 <div className="relative z-10 h-full p-6 sm:p-8 flex flex-col justify-between">
                   {/* Top Bar: Ratings, Age, Visual Specs, Audio Specs */}
-                  <div className="flex items-center justify-between gap-3">
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+                    className="flex items-center justify-between gap-3"
+                  >
                     <div className="flex items-center gap-2">
                       {/* Rating Badge */}
                       <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-neon-yellow/40 text-neon-yellow text-xs font-bold font-mono shadow-md">
@@ -105,13 +118,13 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
                         </span>
                       )}
                     </div>
-                  </div>
+                  </motion.div>
 
                   {/* Bottom Area: Animated Details & CTA */}
                   <motion.div
-                    initial={{ opacity: 0, y: 15 }}
+                    initial={{ opacity: 0, y: 18 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.35, ease: "easeOut" }}
+                    transition={{ duration: 0.55, delay: 0.25, ease: "easeOut" }}
                     className="flex flex-col gap-3 max-w-xl"
                   >
                     {/* Genre Pills */}
@@ -173,7 +186,12 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
 
               {/* ── COLLAPSED STATE (Vertical Teaser Strip) ── */}
               {!isActive && (
-                <div className="relative z-10 h-full p-3.5 flex flex-col justify-between items-center">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.45, delay: 0.2 }}
+                  className="relative z-10 h-full p-3.5 flex flex-col justify-between items-center"
+                >
                   {/* Top Rating */}
                   <div className="flex items-center justify-center w-8 h-8 rounded-full bg-black/75 backdrop-blur-md border border-white/20 text-neon-yellow text-xs font-bold font-mono">
                     {movie.rating}
@@ -192,7 +210,7 @@ export function ExpandingCinemaShelf({ movies }: ExpandingCinemaShelfProps) {
                   <div className="px-2 py-0.5 rounded-full bg-black/60 text-[10px] font-mono text-gray-400 border border-white/10">
                     {movie.ageRating}
                   </div>
-                </div>
+                </motion.div>
               )}
             </div>
           );
