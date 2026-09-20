@@ -1,5 +1,5 @@
 import { TrailerHeroCarousel } from "@/components/home/TrailerHeroCarousel";
-import { LuminaCinemaList } from "@/components/home/LuminaCinemaList";
+import { LuminaInteractiveList } from "@/components/ui/lumina-interactive-list";
 import { ComingSoonSection } from "@/components/home/ComingSoonSection";
 import { getNowShowing } from "@/data/movies";
 import "@/app/homepage-effects.css";
@@ -12,8 +12,8 @@ export default function Home() {
       {/* ── Top Widescreen Real Movie Trailer Carousel (Cinema 21 Style) ── */}
       <TrailerHeroCarousel movies={nowShowing} />
 
-      {/* ── Official NOW SHOWING (Lumina Interactive List) ── */}
-      <LuminaCinemaList movies={nowShowing} />
+      {/* ── Official NOW SHOWING: Lumina WebGL Liquid/Glass Cinematic Slider ── */}
+      <LuminaInteractiveList movies={nowShowing} />
 
       {/* ── Gradient Separator ── */}
       <div className="neon-divider mx-auto my-6 max-w-5xl" />
