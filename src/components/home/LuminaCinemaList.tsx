@@ -19,6 +19,8 @@ import {
   X,
   Crosshair,
   Award,
+  Flame,
+  Film,
 } from "lucide-react";
 
 interface LuminaCinemaListProps {
@@ -34,27 +36,30 @@ export function LuminaCinemaList({ movies }: LuminaCinemaListProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [showTrailer, setShowTrailer] = useState(false);
 
-  // Focus on top 5 featured movies
-  const featuredMovies = movies.slice(0, 5);
+  // Focus on all now showing movies
+  const featuredMovies = movies;
   const activeMovie = featuredMovies[activeIndex] || featuredMovies[0];
 
   return (
-    <section className="py-20 px-4 sm:px-8 max-w-7xl mx-auto w-full relative z-10 select-none">
-      {/* ── Section Header ── */}
+    <section
+      id="now-showing"
+      className="py-20 px-4 sm:px-8 max-w-7xl mx-auto w-full relative z-10 select-none scroll-mt-24"
+    >
+      {/* ── Section Header: NOW SHOWING ── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 pb-5 border-b border-white/10 gap-4">
         <div>
-          <div className="flex items-center gap-2 text-neon-cyan font-mono text-xs font-semibold tracking-widest uppercase mb-2">
-            <Sparkles size={14} className="text-neon-cyan animate-pulse" />
-            CURATED SELECTION // TOP 5 JAKARTA PREMIERE
+          <div className="flex items-center gap-2 text-neon-red font-mono text-xs font-semibold tracking-widest uppercase mb-2">
+            <Flame size={14} className="text-neon-red animate-pulse" />
+            JAKARTA THEATERS // LIVE SELECTION
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-[family-name:var(--font-space-grotesk)] font-extrabold text-white tracking-tight">
-            FEATURED MASTERPIECES
+            NOW SHOWING
           </h2>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-[family-name:var(--font-geist-mono)] text-gray-400">
-          <Award size={14} className="text-neon-yellow" />
-          <span>RANKED BY AUDIENCE SCORE // 2026</span>
+          <Film size={14} className="text-neon-cyan" />
+          <span>{featuredMovies.length} FILMS AVAILABLE // JAKARTA GRID</span>
         </div>
       </div>
 
