@@ -116,47 +116,51 @@ export function HeroSection({ movie: initialMovie }: { movie: Movie }) {
                   text={movie.title}
                   as="h1"
                   intensity="low"
-                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-[family-name:var(--font-orbitron)] font-black text-white tracking-tight leading-none drop-shadow-[0_0_40px_rgba(255,0,51,0.5)]"
+                  className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-[family-name:var(--font-orbitron)] font-black text-slate-50 tracking-tight leading-none drop-shadow-[0_4px_30px_rgba(0,0,0,0.9)]"
                 />
-                <p className="mt-3 text-neon-magenta text-base sm:text-lg font-[family-name:var(--font-orbitron)] tracking-[0.3em] uppercase">
+                <p className="mt-3 text-rose-300/90 text-sm sm:text-base font-mono font-medium tracking-[0.2em] uppercase flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse inline-block" />
                   {movie.tagline}
                 </p>
               </div>
 
               {/* Meta row */}
               <div className="flex flex-wrap items-center gap-2">
-                {movie.genre.slice(0, 3).map((g, i) => (
-                  <NeonBadge key={g} variant={i === 0 ? "red" : i === 1 ? "cyan" : "magenta"}>
+                {movie.genre.slice(0, 3).map((g) => (
+                  <span
+                    key={g}
+                    className="px-3 py-1 rounded-full bg-white/[0.07] border border-white/15 text-slate-200 text-xs font-medium backdrop-blur-md"
+                  >
                     {g}
-                  </NeonBadge>
+                  </span>
                 ))}
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-neon-yellow/10 border border-neon-yellow/40 text-neon-yellow text-xs font-mono font-bold shadow-[0_0_10px_rgba(245,255,0,0.2)]">
-                  <Star size={11} className="fill-neon-yellow" />
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 border border-amber-400/30 text-amber-300 text-xs font-mono font-bold shadow-sm">
+                  <Star size={12} className="fill-amber-400 text-amber-400" />
                   {movie.rating} / 10
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-dark-card/80 border border-white/10 text-gray-300 text-xs font-mono">
-                  <Clock size={11} className="text-neon-cyan" />
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-slate-300 text-xs font-mono">
+                  <Clock size={11} className="text-slate-400" />
                   {Math.floor(movie.duration / 60)}h {movie.duration % 60}m
                 </div>
-                <span className="px-3 py-1 rounded-full bg-dark-card border border-white/10 text-gray-300 text-xs font-mono">
+                <span className="px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-slate-300 text-xs font-mono">
                   {movie.ageRating}
                 </span>
               </div>
 
               {/* Clean Rounded Synopsis */}
-              <p className="text-gray-300 text-sm sm:text-base leading-relaxed max-w-2xl line-clamp-3 sm:line-clamp-4 rounded-2xl border border-white/10 bg-black/40 p-4 backdrop-blur-md">
+              <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl line-clamp-3 sm:line-clamp-4 rounded-2xl border border-white/10 bg-[#08090d]/60 p-4 backdrop-blur-md">
                 {movie.synopsis}
               </p>
 
               {/* Visual + Audio specs */}
               <div className="flex flex-wrap gap-2 text-[10px] font-mono">
                 {(movie.visualSpecs ?? []).map((v) => (
-                  <span key={v} className="px-3 py-1 rounded-full bg-white/5 border border-white/15 text-neon-cyan font-bold tracking-wider">
+                  <span key={v} className="px-3 py-1 rounded-full bg-white/[0.06] border border-white/15 text-slate-200 font-bold tracking-wider backdrop-blur-sm">
                     {v}
                   </span>
                 ))}
                 {(movie.audioSpecs ?? []).map((a) => (
-                  <span key={a} className="px-3 py-1 rounded-full bg-white/5 border border-white/15 text-neon-magenta font-bold tracking-wider">
+                  <span key={a} className="px-3 py-1 rounded-full bg-white/[0.06] border border-white/15 text-rose-300 font-bold tracking-wider backdrop-blur-sm">
                     {a}
                   </span>
                 ))}
