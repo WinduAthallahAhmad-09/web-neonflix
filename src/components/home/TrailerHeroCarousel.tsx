@@ -35,7 +35,7 @@ const TRAILER_IDS: Record<string, string> = {
 
 export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
   const [activeIdx, setActiveIdx] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -46,14 +46,51 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
 
   // Slide navigation handlers
   const nextSlide = () => {
-    soundFx.playClick();
     setActiveIdx((prev) => (prev + 1) % movies.length);
   };
 
   const prevSlide = () => {
-    soundFx.playClick();
     setActiveIdx((prev) => (prev - 1 + movies.length) % movies.length);
   };
+
+  // Auto un-mute and play audio as soon as component mounts and on first user interaction
+  useEffect(() => {
+    const unmuteTrailer = () => {
+      if (iframeRef.current && iframeRef.current.contentWindow) {
+        iframeRef.current.contentWindow.postMessage(
+          '{"event":"command","func":"unMute","args":""}',
+          "*"
+        );
+        iframeRef.current.contentWindow.postMessage(
+          '{"event":"command","func":"setVolume","args":[100]}',
+          "*"
+        );
+      }
+    };
+
+    const t1 = setTimeout(unmuteTrailer, 600);
+    const t2 = setTimeout(unmuteTrailer, 1800);
+
+    // Browser Autoplay Policy listener: unmute immediately on any first gesture
+    const handleGesture = () => {
+      unmuteTrailer();
+      window.removeEventListener("pointerdown", handleGesture);
+      window.removeEventListener("keydown", handleGesture);
+      window.removeEventListener("scroll", handleGesture);
+    };
+
+    window.addEventListener("pointerdown", handleGesture, { once: true });
+    window.addEventListener("keydown", handleGesture, { once: true });
+    window.addEventListener("scroll", handleGesture, { once: true });
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener("pointerdown", handleGesture);
+      window.removeEventListener("keydown", handleGesture);
+      window.removeEventListener("scroll", handleGesture);
+    };
+  }, [activeIdx]);
 
   // 30 Seconds Auto-Advance: automatically advances to next trailer when 30 seconds expires
   useEffect(() => {
@@ -79,7 +116,6 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
 
   // Toggle Sound (send postMessage to YouTube IFrame API)
   const toggleMute = () => {
-    soundFx.playSelect();
     const newMuted = !isMuted;
     setIsMuted(newMuted);
 
@@ -88,6 +124,12 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
         ? '{"event":"command","func":"mute","args":""}'
         : '{"event":"command","func":"unMute","args":""}';
       iframeRef.current.contentWindow.postMessage(command, "*");
+      if (!newMuted) {
+        iframeRef.current.contentWindow.postMessage(
+          '{"event":"command","func":"setVolume","args":[100]}',
+          "*"
+        );
+      }
     }
   };
 
@@ -146,7 +188,7 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
             typeof window !== "undefined" ? window.location.origin : ""
           }`}
           title={`${movie.title} Official Trailer`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay *"
         />
       </div>
 
