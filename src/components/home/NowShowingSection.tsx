@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { getNowShowing, Movie } from "@/data/movies";
-import { NowShowingPairRow } from "./NowShowingPairRow";
+import { useState } from "react";
+import { getNowShowing } from "@/data/movies";
+import { NowShowingRowCard } from "./NowShowingRowCard";
 import { SlidingTabs, SlidingTabOption } from "@/components/ui/SlidingTabs";
 import { Flame, Film, Sparkles, Zap, Compass } from "lucide-react";
 
@@ -17,20 +17,12 @@ const GENRE_TABS: SlidingTabOption[] = [
 export function NowShowingSection() {
   const allMovies = getNowShowing();
   const [selectedGenre, setSelectedGenre] = useState<string>("ALL");
+  const [hoveredMovieId, setHoveredMovieId] = useState<string | null>(null);
 
   const filteredMovies =
     selectedGenre === "ALL"
       ? allMovies
       : allMovies.filter((m) => m.genre.includes(selectedGenre));
-
-  // Chunk movies into pairs of 2 (initially 50% / 50% half-width each, expands sideways on hover)
-  const moviePairs = useMemo(() => {
-    const pairs: Movie[][] = [];
-    for (let i = 0; i < filteredMovies.length; i += 2) {
-      pairs.push(filteredMovies.slice(i, i + 2));
-    }
-    return pairs;
-  }, [filteredMovies]);
 
   return (
     <section id="now-showing" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto w-full relative z-10">
@@ -55,12 +47,15 @@ export function NowShowingSection() {
         />
       </div>
 
-      {/* Paired Half-Width Cards (Smoothly Expands Sideways on Hover) */}
+      {/* Movies lined up on the LEFT, smoothly expanding to the RIGHT on hover */}
       <div className="space-y-6 sm:space-y-8">
-        {moviePairs.map((pair) => (
-          <NowShowingPairRow
-            key={pair.map((m) => m.id).join("-")}
-            movies={pair}
+        {filteredMovies.map((movie) => (
+          <NowShowingRowCard
+            key={movie.id}
+            movie={movie}
+            isHovered={hoveredMovieId === movie.id}
+            onHover={setHoveredMovieId}
+            isAnyHovered={hoveredMovieId !== null}
           />
         ))}
       </div>
