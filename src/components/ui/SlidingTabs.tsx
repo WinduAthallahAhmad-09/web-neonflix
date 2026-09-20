@@ -92,20 +92,21 @@ export function SlidingTabs({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                  transition={{ type: "spring", stiffness: 260, damping: 28 }}
                 />
               )}
             </AnimatePresence>
 
-            {/* 2. Active Glowing Neon-Red Pill (Spring sliding physics) */}
+            {/* 2. Active Glowing Red Pill - Silky Smooth Fluid Spring */}
             {isActive && (
               <motion.div
                 layoutId={`${layoutIdPrefix}-active-pill`}
-                className="absolute inset-0 rounded-full bg-gradient-to-r from-red-600 via-neon-red to-red-600 shadow-[0_0_22px_#ff0033,inset_0_1px_2px_rgba(255,255,255,0.5)] border border-red-400/50 z-0"
+                className="absolute inset-0 rounded-full bg-gradient-to-r from-red-600 via-rose-600 to-red-600 shadow-[0_0_20px_rgba(229,9,20,0.55),inset_0_1px_2px_rgba(255,255,255,0.45)] border border-red-400/50 z-0"
                 transition={{
                   type: "spring",
-                  stiffness: 480,
-                  damping: 34,
+                  stiffness: 220,
+                  damping: 26,
+                  mass: 0.8,
                 }}
               />
             )}
