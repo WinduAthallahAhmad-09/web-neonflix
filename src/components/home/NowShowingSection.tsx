@@ -47,7 +47,7 @@ export function NowShowingSection() {
         />
       </div>
 
-      {/* Movies lined up on the LEFT, smoothly expanding to the RIGHT on hover */}
+      {/* Centered Movie Cards at 3/4 width, smoothly expanding outward to full width on hover */}
       <div className="space-y-6 sm:space-y-8">
         {filteredMovies.map((movie) => (
           <NowShowingRowCard

@@ -17,8 +17,8 @@ interface NowShowingRowCardProps {
 
 /**
  * NowShowingRowCard:
- * - All cards line up neatly on the LEFT side (50% half-width initially).
- * - When hovered, the card smoothly MELEBAR KE KANAN (expands to the right) to full 100% width.
+ * - Each card is centered horizontally at 3/4 width (75% width initially).
+ * - When hovered, the card smoothly MELEBAR KE DUA SISI (expands outwards from the center) to full 100% width.
  * - Reveals full cinematic widescreen backdrop, complete synopsis, director, cast, and audio specs.
  * - Silky smooth 850ms cubic-bezier transition, zero vertical layout shift.
  */
@@ -29,7 +29,7 @@ export function NowShowingRowCard({
   isAnyHovered,
 }: NowShowingRowCardProps) {
   return (
-    <div className="w-full flex justify-start items-stretch">
+    <div className="w-full flex justify-center items-stretch">
       <div
         onMouseEnter={() => {
           soundFx.playHover();
@@ -44,8 +44,8 @@ export function NowShowingRowCard({
           isHovered
             ? "w-full border-neon-red shadow-[0_15px_45px_rgba(255,0,51,0.32)] ring-1 ring-neon-red/50 z-20"
             : isAnyHovered
-            ? "w-full md:w-[50%] lg:w-[48%] border-white/10 opacity-70 hover:opacity-100 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-10"
-            : "w-full md:w-[50%] lg:w-[48%] border-white/10 hover:border-white/30 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-10"
+            ? "w-full md:w-3/4 lg:w-3/4 border-white/10 opacity-70 hover:opacity-100 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-10"
+            : "w-full md:w-3/4 lg:w-3/4 border-white/10 hover:border-white/30 shadow-[0_10px_30px_rgba(0,0,0,0.8)] z-10"
         }`}
         style={{
           transition:
