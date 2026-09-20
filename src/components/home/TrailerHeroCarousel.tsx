@@ -38,11 +38,47 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isInView, setIsInView] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const movie = movies[activeIdx] || movies[0];
   const youtubeId = getYoutubeId(movie.trailerUrl) || TRAILER_IDS[movie.id] || "daXaTug8rL4";
+
+  // IntersectionObserver: automatically close/pause trailer when scrolled out of view
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible = entry.isIntersecting;
+        setIsInView(visible);
+
+        // Immediately pause and mute YouTube stream when leaving viewport
+        if (!visible && iframeRef.current && iframeRef.current.contentWindow) {
+          try {
+            iframeRef.current.contentWindow.postMessage(
+              '{"event":"command","func":"pauseVideo","args":""}',
+              "*"
+            );
+            iframeRef.current.contentWindow.postMessage(
+              '{"event":"command","func":"mute","args":""}',
+              "*"
+            );
+          } catch {
+            // Ignore
+          }
+        }
+      },
+      {
+        threshold: 0.1, // Trigger when less than 10% is visible
+      }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Slide navigation handlers
   const nextSlide = () => {
@@ -53,16 +89,22 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
     setActiveIdx((prev) => (prev - 1 + movies.length) % movies.length);
   };
 
-  // Auto un-mute and play audio as soon as component mounts and on first user interaction
+  // Auto un-mute and play audio as soon as component mounts, becomes visible, or active slide changes
   useEffect(() => {
+    if (!isInView) return;
+
     const unmuteTrailer = () => {
-      if (iframeRef.current && iframeRef.current.contentWindow) {
+      if (!isMuted && iframeRef.current && iframeRef.current.contentWindow) {
         iframeRef.current.contentWindow.postMessage(
           '{"event":"command","func":"unMute","args":""}',
           "*"
         );
         iframeRef.current.contentWindow.postMessage(
           '{"event":"command","func":"setVolume","args":[100]}',
+          "*"
+        );
+        iframeRef.current.contentWindow.postMessage(
+          '{"event":"command","func":"playVideo","args":""}',
           "*"
         );
       }
@@ -90,16 +132,18 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
       window.removeEventListener("keydown", handleGesture);
       window.removeEventListener("scroll", handleGesture);
     };
-  }, [activeIdx]);
+  }, [activeIdx, isInView, isMuted]);
 
-  // 30 Seconds Auto-Advance: automatically advances to next trailer when 30 seconds expires
+  // 30 Seconds Auto-Advance: automatically advances to next trailer when 30 seconds expires (only when in view!)
   useEffect(() => {
+    if (!isInView) return;
+
     const timer = setInterval(() => {
       setActiveIdx((prev) => (prev + 1) % movies.length);
     }, 30000); // 30 seconds
 
     return () => clearInterval(timer);
-  }, [activeIdx, movies.length]);
+  }, [activeIdx, movies.length, isInView]);
 
   // Keyboard arrow keys navigation
   useEffect(() => {
@@ -176,21 +220,23 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-dark-bg via-black/30 to-black/60" />
       </div>
 
-      {/* ── Real YouTube Video Trailer Stream ── */}
-      <div className="absolute inset-0 z-1 pointer-events-none overflow-hidden flex items-center justify-center">
-        <iframe
-          key={`${movie.id}-${isMuted ? "muted" : "unmuted"}`}
-          ref={iframeRef}
-          className="w-[125vw] h-[125vh] min-w-[100%] min-h-[100%] pointer-events-none scale-105"
-          src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=${
-            isMuted ? 1 : 0
-          }&controls=0&loop=1&playlist=${youtubeId}&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=${
-            typeof window !== "undefined" ? window.location.origin : ""
-          }`}
-          title={`${movie.title} Official Trailer`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay *"
-        />
-      </div>
+      {/* ── Real YouTube Video Trailer Stream (Auto-closed/unmounted when scrolled out of view) ── */}
+      {isInView && (
+        <div className="absolute inset-0 z-1 pointer-events-none overflow-hidden flex items-center justify-center">
+          <iframe
+            key={`${movie.id}-${isMuted ? "muted" : "unmuted"}`}
+            ref={iframeRef}
+            className="w-[125vw] h-[125vh] min-w-[100%] min-h-[100%] pointer-events-none scale-105"
+            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=${
+              isMuted ? 1 : 0
+            }&controls=0&loop=1&playlist=${youtubeId}&playsinline=1&rel=0&modestbranding=1&enablejsapi=1&origin=${
+              typeof window !== "undefined" ? window.location.origin : ""
+            }`}
+            title={`${movie.title} Official Trailer`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay *"
+          />
+        </div>
+      )}
 
       {/* ── Subtle Vignette & Gradient Overlays (Cinema Aesthetic) ── */}
       <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-dark-bg via-transparent to-black/50" />
