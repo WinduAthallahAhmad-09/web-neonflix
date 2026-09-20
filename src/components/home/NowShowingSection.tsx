@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { getNowShowing, Movie } from "@/data/movies";
-import { ExpandingCinemaShelf } from "./ExpandingCinemaShelf";
+import { getNowShowing } from "@/data/movies";
+import { NowShowingCard } from "./NowShowingCard";
 import { SlidingTabs, SlidingTabOption } from "@/components/ui/SlidingTabs";
 import { Flame, Film, Sparkles, Zap, Compass } from "lucide-react";
 
@@ -37,7 +37,7 @@ export function NowShowingSection() {
           </h2>
         </div>
 
-        {/* Cyberpunk Sliding Pill Tabs (Matches User Reference Image) */}
+        {/* Cyberpunk Sliding Pill Tabs */}
         <SlidingTabs
           tabs={GENRE_TABS}
           activeId={selectedGenre}
@@ -46,8 +46,12 @@ export function NowShowingSection() {
         />
       </div>
 
-      {/* Interactive Apple TV / Netflix Expanding Cinema Shelf */}
-      <ExpandingCinemaShelf movies={filteredMovies} />
+      {/* Widescreen Cinema Showcase Cards (Rich Content Stack) */}
+      <div className="space-y-8 lg:space-y-10">
+        {filteredMovies.map((movie) => (
+          <NowShowingCard key={movie.id} movie={movie} />
+        ))}
+      </div>
     </section>
   );
 }
