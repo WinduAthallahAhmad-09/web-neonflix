@@ -15,7 +15,7 @@ export function ComingSoonSection() {
   const comingSoonMovies = getComingSoon();
 
   return (
-    <section className="py-20 px-4 sm:px-8 max-w-7xl mx-auto w-full relative z-10">
+    <section id="coming-soon" className="py-20 px-4 sm:px-8 max-w-7xl mx-auto w-full relative z-10">
       {/* Clean & Sleek Section Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 pb-5 border-b border-white/10 gap-4">
         <div>

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { GlitchText } from "../ui/GlitchText";
 import { useUserStore } from "@/store/userStore";
 import { soundFx } from "@/lib/soundFx";
-import { Menu, X, Shield, Film, Flame, Clapperboard, Award } from "lucide-react";
+import { Menu, X, Shield, Film, Flame, Clapperboard, Sparkles, Award } from "lucide-react";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +18,8 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: "EXPLORE", href: "/", icon: Film },
-    { name: "MOVIE LIST", href: "/#now-showing", icon: Clapperboard },
+    { name: "NOW SHOWING", href: "/#now-showing", icon: Clapperboard },
+    { name: "COMING SOON", href: "/#coming-soon", icon: Sparkles },
     { name: "REWARD", href: "/profile", icon: Award },
   ];
 
@@ -31,14 +32,25 @@ export const Navbar = () => {
 
     if (pathname === "/") {
       const handleScroll = () => {
+        const comingSoonElem = document.getElementById("coming-soon");
         const nowShowingElem = document.getElementById("now-showing");
-        if (nowShowingElem) {
-          const rect = nowShowingElem.getBoundingClientRect();
-          if (rect.top <= 300) {
-            setActiveTab("MOVIE LIST");
+
+        if (comingSoonElem) {
+          const csRect = comingSoonElem.getBoundingClientRect();
+          if (csRect.top <= 350) {
+            setActiveTab("COMING SOON");
             return;
           }
         }
+
+        if (nowShowingElem) {
+          const nsRect = nowShowingElem.getBoundingClientRect();
+          if (nsRect.top <= 350) {
+            setActiveTab("NOW SHOWING");
+            return;
+          }
+        }
+
         setActiveTab("EXPLORE");
       };
 
@@ -57,9 +69,15 @@ export const Navbar = () => {
     if (link.name === "EXPLORE" && pathname === "/") {
       e.preventDefault();
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } else if (link.name === "MOVIE LIST" && pathname === "/") {
+    } else if (link.name === "NOW SHOWING" && pathname === "/") {
       e.preventDefault();
       const elem = document.getElementById("now-showing");
+      if (elem) {
+        elem.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    } else if (link.name === "COMING SOON" && pathname === "/") {
+      e.preventDefault();
+      const elem = document.getElementById("coming-soon");
       if (elem) {
         elem.scrollIntoView({ behavior: "smooth", block: "start" });
       }
