@@ -3,9 +3,8 @@
 import { useBookingStore } from "@/store/bookingStore";
 import { formatCurrency } from "@/lib/utils";
 import { useRouter } from "next/navigation";
-import { NeonButton } from "@/components/ui/NeonButton";
 import { soundFx } from "@/lib/soundFx";
-import { ShoppingBag, X, Zap, ArrowRight } from "lucide-react";
+import { ShoppingBag, X, ArrowRight, Film } from "lucide-react";
 
 interface CartSummaryProps {
   showtimeId: string;
@@ -15,6 +14,7 @@ export function CartSummary({ showtimeId }: CartSummaryProps) {
   const router = useRouter();
   const {
     foodCart,
+    selectedSeats,
     totalTicketPrice,
     totalFoodPrice,
     totalPrice,
@@ -32,90 +32,101 @@ export function CartSummary({ showtimeId }: CartSummaryProps) {
   };
 
   return (
-    <div className="bg-dark-card border border-neon-cyan/40 p-5 shadow-[0_0_25px_rgba(0,0,0,0.8)] sticky top-28">
-      <div className="flex justify-between items-center pb-3 border-b border-dark-border mb-4">
-        <h3 className="font-[family-name:var(--font-orbitron)] text-base font-bold text-white tracking-wider flex items-center gap-2">
+    <div className="rounded-2xl bg-[#111118]/80 border border-white/10 p-6 shadow-xl sticky top-28 backdrop-blur-md">
+      {/* Header Summary */}
+      <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+        <div className="flex items-center gap-2 text-white font-semibold text-sm">
           <ShoppingBag size={16} className="text-neon-cyan" />
-          RATION MANIFEST
-        </h3>
-        <span className="text-[10px] font-mono text-neon-cyan font-bold">
-          [{foodCart.length} ITEMS]
+          <span>Order Summary</span>
+        </div>
+        <span className="text-xs text-gray-400 font-mono">
+          {foodCart.length} {foodCart.length === 1 ? "item" : "items"}
         </span>
       </div>
 
-      {/* Item List */}
-      <div className="max-h-[35vh] overflow-y-auto pr-1 mb-5 space-y-3">
+      {/* Selected Items List */}
+      <div className="max-h-[32vh] overflow-y-auto pr-1 mb-5 space-y-2.5 no-scrollbar">
         {foodCart.length > 0 ? (
           foodCart.map((item) => (
             <div
               key={item.id}
-              className="flex justify-between items-center text-xs font-mono p-2 bg-dark-surface/60 border border-dark-border"
+              className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 text-xs"
             >
-              <div className="flex-grow pr-2">
-                <div className="text-white font-bold">{item.name}</div>
-                <div className="text-gray-400 text-[10px]">
-                  QTY: {item.quantity} × {formatCurrency(item.price)}
+              <div className="pr-2">
+                <div className="text-white font-semibold">{item.name}</div>
+                <div className="text-gray-400 text-[11px] font-mono mt-0.5">
+                  {item.quantity} × {formatCurrency(item.price)}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-neon-cyan font-bold">
+              <div className="flex items-center gap-2.5">
+                <span className="font-bold text-white font-mono">
                   {formatCurrency(item.price * item.quantity)}
                 </span>
                 <button
+                  type="button"
                   onClick={() => {
                     soundFx.playClick();
                     removeFoodItem(item.id);
                   }}
-                  className="text-gray-500 hover:text-neon-red p-1 cursor-pointer"
-                  title="Remove"
+                  className="text-gray-500 hover:text-red-400 p-1 transition-colors cursor-pointer"
+                  title="Hapus"
                 >
-                  <X size={13} />
+                  <X size={14} />
                 </button>
               </div>
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-500 text-xs font-mono py-6 border border-dashed border-dark-border italic">
-            // NO RATIONS SELECTED
+          <div className="text-center py-6 text-xs text-gray-500 border border-dashed border-white/10 rounded-xl">
+            Belum ada snack atau minuman yang dipilih
           </div>
         )}
       </div>
 
       {/* Pricing Breakdown */}
-      <div className="border-t border-dark-border pt-4 mb-5 space-y-2 text-xs font-mono">
+      <div className="pt-4 border-t border-white/10 space-y-2.5 text-xs">
         <div className="flex justify-between text-gray-400">
-          <span>TICKET PODS:</span>
-          <span className="text-white font-bold">{formatCurrency(totalTicketPrice)}</span>
-        </div>
-        <div className="flex justify-between text-gray-400">
-          <span>RATIONS & STIMS:</span>
-          <span className="text-neon-cyan font-bold">{formatCurrency(totalFoodPrice)}</span>
+          <span className="flex items-center gap-1.5">
+            <Film size={13} className="text-gray-400" />
+            Tiket Bioskop ({selectedSeats.length} kursi)
+          </span>
+          <span className="text-white font-semibold font-mono">
+            {formatCurrency(totalTicketPrice)}
+          </span>
         </div>
 
-        <div className="flex justify-between items-end pt-3 border-t border-dark-border/80">
-          <div className="text-gray-300 font-bold">TOTAL ACQUISITION:</div>
-          <div className="text-2xl font-bold text-white font-mono drop-shadow-[0_0_10px_rgba(0,247,255,0.6)]">
+        <div className="flex justify-between text-gray-400">
+          <span>Snacks & Drinks</span>
+          <span className="text-neon-cyan font-semibold font-mono">
+            {formatCurrency(totalFoodPrice)}
+          </span>
+        </div>
+
+        <div className="flex justify-between items-baseline pt-3 border-t border-white/10">
+          <span className="text-sm font-semibold text-gray-200">Total Pembayaran</span>
+          <span className="text-xl sm:text-2xl font-bold text-white font-mono drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">
             {formatCurrency(totalPrice)}
-          </div>
+          </span>
         </div>
       </div>
 
-      {/* Buttons */}
-      <div className="flex flex-col gap-2">
-        <NeonButton
-          variant="primary"
-          size="lg"
-          className="w-full"
-          onClick={handleProceed}
-        >
-          CONFIRM ORDER <ArrowRight size={16} />
-        </NeonButton>
+      {/* Action Buttons */}
+      <div className="mt-6 flex flex-col gap-3">
         <button
-          onClick={handleSkip}
-          onMouseEnter={() => soundFx.playHover()}
-          className="text-gray-400 hover:text-white text-xs font-mono py-2 tracking-wider transition-colors cursor-pointer text-center"
+          type="button"
+          onClick={handleProceed}
+          className="w-full py-3 px-5 rounded-full bg-neon-red hover:bg-red-600 text-white font-[family-name:var(--font-orbitron)] font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(255,0,51,0.5)] hover:shadow-[0_0_30px_rgba(255,0,51,0.8)] transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
         >
-          [ SKIP RATIONS &gt;&gt; ]
+          <span>Lanjut ke Pembayaran</span>
+          <ArrowRight size={15} />
+        </button>
+
+        <button
+          type="button"
+          onClick={handleSkip}
+          className="w-full py-2 text-gray-400 hover:text-white text-xs font-medium transition-colors cursor-pointer text-center"
+        >
+          Lewati cemilan & lanjutkan &rarr;
         </button>
       </div>
     </div>

@@ -3,9 +3,9 @@
 import { FoodItem } from "@/data/foods";
 import { useBookingStore } from "@/store/bookingStore";
 import { formatCurrency } from "@/lib/utils";
-import { NeonBadge } from "@/components/ui/NeonBadge";
 import { soundFx } from "@/lib/soundFx";
-import { Minus, Plus, ShoppingBag, Zap } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface FoodCardProps {
   food: FoodItem;
@@ -16,15 +16,6 @@ export function FoodCard({ food }: FoodCardProps) {
     useBookingStore();
   const cartItem = foodCart.find((item) => item.id === food.id);
   const quantity = cartItem?.quantity || 0;
-
-  const badgeVariant =
-    food.badge === "BEST SELLER"
-      ? "yellow"
-      : food.badge === "NEW"
-      ? "magenta"
-      : food.badge === "LIMITED"
-      ? "red"
-      : "cyan";
 
   const handleAdd = () => {
     soundFx.playSeatSelect(true);
@@ -46,68 +37,82 @@ export function FoodCard({ food }: FoodCardProps) {
   };
 
   return (
-    <div className="bg-dark-card border border-dark-border hover:border-neon-cyan/80 transition-all duration-300 p-4 flex flex-col justify-between relative group shadow-[0_0_15px_rgba(0,0,0,0.8)] hover:shadow-[0_0_20px_rgba(0,247,255,0.25)]">
-      {/* Badge */}
+    <div className="group relative flex flex-col justify-between rounded-2xl bg-[#111118]/80 border border-white/10 hover:border-white/25 hover:bg-[#151520] transition-all duration-300 p-5 shadow-lg backdrop-blur-md">
+      {/* Minimalist Badge */}
       {food.badge && (
-        <div className="absolute top-2 right-2 z-10">
-          <NeonBadge variant={badgeVariant} className="text-[9px]">
-            {food.badge}
-          </NeonBadge>
-        </div>
+        <span className="absolute top-3.5 right-3.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold tracking-wider uppercase bg-white/10 text-white border border-white/15 backdrop-blur-sm">
+          {food.badge}
+        </span>
       )}
 
-      {/* Product Hologram Visual */}
-      <div className="flex-grow flex flex-col items-center justify-center py-4">
-        <div className="text-5xl mb-3 group-hover:scale-110 transition-transform filter drop-shadow-[0_0_12px_rgba(0,247,255,0.4)]">
+      {/* Visual & Content */}
+      <div className="flex flex-col items-center text-center pt-2">
+        <div className="w-20 h-20 flex items-center justify-center text-5xl mb-3 group-hover:scale-108 transition-transform duration-300 select-none filter drop-shadow-md">
           {food.imageUrl}
         </div>
-        <h3 className="text-base font-[family-name:var(--font-orbitron)] font-bold text-white text-center mb-1 group-hover:text-neon-cyan transition-colors">
+
+        <h3 className="text-sm sm:text-base font-semibold text-white mb-1.5 line-clamp-1">
           {food.name}
         </h3>
-        <p className="text-xs text-gray-400 text-center mb-3 font-sans">
+        <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed max-w-[220px]">
           {food.description}
         </p>
-
-        {/* Tactical Stat Buff Spec */}
-        <div className="px-2 py-0.5 bg-dark-surface border border-dark-border/80 text-[10px] font-mono text-neon-green flex items-center gap-1">
-          <Zap size={10} /> +25 XP // BIO-ENERGY STIM
-        </div>
       </div>
 
-      {/* Pricing & Control */}
-      <div className="mt-auto border-t border-dark-border/60 pt-3">
-        <div className="text-base font-bold font-mono text-neon-cyan mb-3 text-center">
+      {/* Footer: Clean Price & Morphing Stepper */}
+      <div className="mt-5 pt-3.5 border-t border-white/10 flex items-center justify-between">
+        <span className="text-sm sm:text-base font-bold text-white tabular-nums font-mono">
           {formatCurrency(food.price)}
-        </div>
+        </span>
 
-        {quantity > 0 ? (
-          <div className="flex items-center justify-between bg-dark-surface border border-neon-cyan/50 p-1">
-            <button
-              onClick={handleDecrement}
-              className="p-1.5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
-            >
-              <Minus size={14} />
-            </button>
-            <span className="font-bold text-white font-mono text-sm px-2">
-              {quantity}
-            </span>
-            <button
-              onClick={handleIncrement}
-              className="p-1.5 text-neon-cyan hover:text-white hover:bg-neon-cyan/20 transition-colors cursor-pointer"
-            >
-              <Plus size={14} />
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={handleAdd}
-            onMouseEnter={() => soundFx.playHover()}
-            className="w-full py-2 flex items-center justify-center gap-2 bg-dark-surface border border-dark-border text-gray-300 hover:text-neon-cyan hover:border-neon-cyan hover:bg-neon-cyan/10 transition-all font-[family-name:var(--font-orbitron)] text-xs font-bold cursor-pointer"
-          >
-            <ShoppingBag size={14} />
-            REQUISITION
-          </button>
-        )}
+        {/* Morphing Stepper / Add Button */}
+        <div className="relative">
+          <AnimatePresence mode="wait">
+            {quantity > 0 ? (
+              <motion.div
+                key="stepper"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.15 }}
+                className="flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-2 py-1 shadow-inner"
+              >
+                <button
+                  type="button"
+                  onClick={handleDecrement}
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/15 transition-colors cursor-pointer"
+                  aria-label="Kurangi jumlah"
+                >
+                  <Minus size={12} />
+                </button>
+                <span className="text-xs font-bold text-white min-w-[18px] text-center tabular-nums font-mono">
+                  {quantity}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleIncrement}
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-neon-cyan hover:text-white hover:bg-neon-cyan/20 transition-colors cursor-pointer"
+                  aria-label="Tambah jumlah"
+                >
+                  <Plus size={12} />
+                </button>
+              </motion.div>
+            ) : (
+              <motion.button
+                key="add-btn"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.15 }}
+                onClick={handleAdd}
+                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/5 hover:bg-white/15 text-gray-200 hover:text-white border border-white/15 hover:border-white/30 text-xs font-semibold transition-all cursor-pointer shadow-sm active:scale-95"
+              >
+                <Plus size={13} className="text-neon-cyan" />
+                <span>Add</span>
+              </motion.button>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

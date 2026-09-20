@@ -1,20 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { foodItems, FoodItem } from "@/data/foods";
+import { foodItems } from "@/data/foods";
 import { FoodCard } from "./FoodCard";
 import { soundFx } from "@/lib/soundFx";
+import { motion } from "framer-motion";
 import { Utensils, Coffee, Popcorn, Zap, Sparkles } from "lucide-react";
 
 export function FoodMenu() {
   const [category, setCategory] = useState<string>("all");
 
   const categories = [
-    { id: "all", label: "ALL RATIONS", icon: Sparkles },
-    { id: "combos", label: "COMBOS", icon: Zap },
-    { id: "popcorn", label: "POPCORN", icon: Popcorn },
-    { id: "drinks", label: "BEVERAGES", icon: Coffee },
-    { id: "snacks", label: "SNACKS", icon: Utensils },
+    { id: "all", label: "All Items", icon: Sparkles },
+    { id: "combos", label: "Combos", icon: Zap },
+    { id: "popcorn", label: "Popcorn", icon: Popcorn },
+    { id: "drinks", label: "Drinks", icon: Coffee },
+    { id: "snacks", label: "Snacks", icon: Utensils },
   ];
 
   const filteredFoods =
@@ -29,30 +30,42 @@ export function FoodMenu() {
 
   return (
     <div className="flex-grow">
-      {/* Category Tabs */}
-      <div className="flex overflow-x-auto gap-2 pb-4 mb-6 border-b border-dark-border scrollbar-hide">
+      {/* Minimalist Floating Category Pills */}
+      <div className="flex overflow-x-auto gap-2 pb-4 mb-8 border-b border-white/10 no-scrollbar">
         {categories.map((cat) => {
           const isSelected = category === cat.id;
           const Icon = cat.icon;
+
           return (
             <button
               key={cat.id}
               onClick={() => handleCategory(cat.id)}
-              onMouseEnter={() => soundFx.playHover()}
-              className={`flex-shrink-0 px-4 py-2 text-xs font-[family-name:var(--font-orbitron)] font-bold tracking-wider transition-all duration-200 border cursor-pointer flex items-center gap-2 ${
+              className={`relative flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-colors cursor-pointer select-none flex items-center gap-2 ${
                 isSelected
-                  ? "bg-neon-cyan/20 border-neon-cyan text-neon-cyan shadow-[0_0_15px_rgba(0,247,255,0.4)]"
-                  : "bg-dark-card border-dark-border text-gray-400 hover:border-gray-500 hover:text-white"
+                  ? "text-white"
+                  : "text-gray-400 hover:text-gray-200"
               }`}
             >
-              <Icon size={14} className={isSelected ? "text-neon-cyan" : "text-gray-500"} />
-              {cat.label}
+              {isSelected && (
+                <motion.div
+                  layoutId="snackActiveCategoryPill"
+                  className="absolute inset-0 rounded-full bg-white/15 border border-white/20 shadow-sm"
+                  transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                />
+              )}
+              <Icon
+                size={14}
+                className={`relative z-10 ${
+                  isSelected ? "text-neon-cyan" : "text-gray-400"
+                }`}
+              />
+              <span className="relative z-10">{cat.label}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Grid of Food Cards */}
+      {/* Grid of Clean Food Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         {filteredFoods.map((food) => (
           <FoodCard key={food.id} food={food} />
