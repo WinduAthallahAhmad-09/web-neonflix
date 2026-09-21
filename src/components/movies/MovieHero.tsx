@@ -21,7 +21,6 @@ import {
   Crosshair,
   User,
   Shield,
-  Ticket,
 } from "lucide-react";
 import { Holographic3DPoster } from "./Holographic3DPoster";
 import { CinemaDossierTabs } from "./CinemaDossierTabs";
@@ -32,14 +31,6 @@ interface MovieHeroProps {
 
 export function MovieHero({ movie }: MovieHeroProps) {
   const [showTrailer, setShowTrailer] = useState(false);
-
-  const handleBookShowtime = () => {
-    soundFx.playSelect(true);
-    const el = document.getElementById("showtime-matrix-section");
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  };
 
   return (
     <div className="relative w-full min-h-[85vh] flex items-center pt-28 pb-16 overflow-hidden select-none">
@@ -124,14 +115,6 @@ export function MovieHero({ movie }: MovieHeroProps) {
 
             {/* Action CTAs */}
             <div className="flex flex-wrap gap-4 pt-2">
-              <NeonButton
-                variant="primary"
-                size="lg"
-                onClick={handleBookShowtime}
-              >
-                <Ticket size={18} />
-                BOOK SHOWTIME & SEATS
-              </NeonButton>
               <NeonButton
                 variant="secondary"
                 size="lg"
