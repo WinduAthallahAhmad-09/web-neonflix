@@ -39,8 +39,14 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isInView, setIsInView] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Avoid SSR hydration mismatch: ensure client-specific iframe origin only mounts on client
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const movie = movies[activeIdx] || movies[0];
   const youtubeId = getYoutubeId(movie.trailerUrl) || TRAILER_IDS[movie.id] || "daXaTug8rL4";
@@ -91,7 +97,7 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
 
   // Auto un-mute and play audio as soon as component mounts, becomes visible, or active slide changes
   useEffect(() => {
-    if (!isInView) return;
+    if (!isMounted || !isInView) return;
 
     const unmuteTrailer = () => {
       if (!isMuted && iframeRef.current && iframeRef.current.contentWindow) {
@@ -221,7 +227,7 @@ export function TrailerHeroCarousel({ movies }: TrailerHeroCarouselProps) {
       </div>
 
       {/* ── Real YouTube Video Trailer Stream (Auto-closed/unmounted when scrolled out of view) ── */}
-      {isInView && (
+      {isMounted && isInView && (
         <div className="absolute inset-0 z-1 pointer-events-none overflow-hidden flex items-center justify-center">
           <iframe
             key={`${movie.id}-${isMuted ? "muted" : "unmuted"}`}
