@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { GlitchText } from "../ui/GlitchText";
 import { useUserStore } from "@/store/userStore";
+import { useWeb3Store } from "@/store/web3Store";
 import { soundFx } from "@/lib/soundFx";
 import { Menu, X, Shield, Film, Flame, Clapperboard, Sparkles, Award } from "lucide-react";
 
@@ -15,6 +16,16 @@ export const Navbar = () => {
   const [activeTab, setActiveTab] = useState<string>("EXPLORE");
   const pathname = usePathname();
   const { level, xp } = useUserStore();
+  const { 
+    address, 
+    isConnected, 
+    isConnecting, 
+    chainId, 
+    connectWallet, 
+    disconnect, 
+    switchToBotChain,
+    checkConnection
+  } = useWeb3Store();
 
   // Prevents scroll listener from fighting/jittering with button clicks during smooth scroll
   const isClickScrollingRef = useRef(false);
@@ -29,6 +40,8 @@ export const Navbar = () => {
 
   // Keep activeTab in sync with pathname & scroll position on homepage
   useEffect(() => {
+    checkConnection();
+    
     if (pathname === "/profile") {
       setActiveTab("REWARD");
       return;
@@ -200,7 +213,7 @@ export const Navbar = () => {
           })}
         </nav>
 
-        {/* Right: Gamification XP / Level HUD Widget */}
+        {/* Right: Gamification HUD & Wallet Connect */}
         <div className="flex items-center gap-3">
           <Link
             href="/profile"
@@ -220,6 +233,43 @@ export const Navbar = () => {
               {level}
             </div>
           </Link>
+
+          {/* Web3 Connect Wallet Button */}
+          {isConnected ? (
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                if (chainId !== 968) {
+                  switchToBotChain();
+                } else {
+                  disconnect();
+                }
+              }}
+              className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-black/80 backdrop-blur-md text-xs font-[family-name:var(--font-orbitron)] font-bold tracking-wider rounded border transition-all ${
+                chainId === 968
+                  ? "border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 shadow-[0_0_10px_rgba(0,247,255,0.2)]"
+                  : "border-red-500 text-red-500 hover:bg-red-500/10 shadow-[0_0_10px_rgba(255,0,0,0.3)] animate-pulse"
+              }`}
+              title={chainId === 968 ? "Connected to BOT Chain Testnet. Click to disconnect." : "Wrong Network. Click to switch to BOT Chain Testnet."}
+            >
+              <Shield size={12} className={chainId === 968 ? "text-neon-cyan" : "text-red-500"} />
+              {chainId === 968 
+                ? `${address?.slice(0, 4)}...${address?.slice(-4)}`
+                : "SWITCH NET"}
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                soundFx.playClick();
+                connectWallet();
+              }}
+              disabled={isConnecting}
+              className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-dark-card/90 border border-neon-cyan/50 hover:border-neon-cyan text-neon-cyan hover:text-white hover:bg-neon-cyan/20 text-xs font-[family-name:var(--font-orbitron)] font-bold tracking-wider rounded transition-all shadow-[0_0_10px_rgba(0,247,255,0.2)] hover:shadow-[0_0_20px_rgba(0,247,255,0.5)]"
+            >
+              <Shield size={12} className={isConnecting ? "animate-spin" : ""} />
+              {isConnecting ? "CONNECTING..." : "CONNECT WALLET"}
+            </button>
+          )}
 
           {/* Mobile Hamburger Button */}
           <button
