@@ -4,27 +4,31 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useBookingStore } from "@/store/bookingStore";
 import { useUserStore } from "@/store/userStore";
+import { useWeb3Store } from "@/store/web3Store";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { XP_PER_BOOKING, XP_PER_FOOD_ORDER } from "@/lib/constants";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { soundFx } from "@/lib/soundFx";
 import { CreditCard, Smartphone, ShieldCheck, Zap, Lock, QrCode } from "lucide-react";
+import { BrowserProvider, Contract } from "ethers";
+import { NEONFLIX_TICKETING_ABI, NEONFLIX_TICKETING_ADDRESS } from "@/lib/contracts";
 
 interface CheckoutFormProps {
   showtimeId: string;
 }
 
 const PAYMENT_METHODS = [
+  { id: "botchain", name: "BOT Chain Smart Contract", icon: <ShieldCheck size={18} />, badge: "WEB3" },
   { id: "gopay", name: "GoPay / QRIS Instant", icon: <Smartphone size={18} />, badge: "INSTANT" },
-  { id: "dana", name: "DANA Cyber Wallet", icon: <QrCode size={18} />, badge: "0% FEE" },
-  { id: "ovo", name: "OVO Smart Pay", icon: <Smartphone size={18} />, badge: "FAST" },
   { id: "cc", name: "Encrypted Credit / Debit", icon: <CreditCard size={18} />, badge: "SECURE" },
 ];
 
 export function CheckoutForm({ showtimeId }: CheckoutFormProps) {
   const router = useRouter();
-  const [paymentMethod, setPaymentMethod] = useState("gopay");
+  const [paymentMethod, setPaymentMethod] = useState("botchain");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const {
     movieTitle,
@@ -38,7 +42,9 @@ export function CheckoutForm({ showtimeId }: CheckoutFormProps) {
     totalTicketPrice,
     totalFoodPrice,
   } = useBookingStore();
+  
   const { addXP, incrementBookings } = useUserStore();
+  const { isConnected, connectWallet, chainId, switchToBotChain } = useWeb3Store();
 
   const serviceFee = 5000;
   const finalTotal = totalTicketPrice + totalFoodPrice + serviceFee;
@@ -46,31 +52,93 @@ export function CheckoutForm({ showtimeId }: CheckoutFormProps) {
   const handleSelectPayment = (id: string) => {
     soundFx.playClick();
     setPaymentMethod(id);
+    setErrorMessage(null);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     soundFx.playClick();
-    setIsProcessing(true);
+    setErrorMessage(null);
 
-    // Simulate cyber payment processing sequence
-    setTimeout(() => {
-      let earnedXP = XP_PER_BOOKING;
-      if (foodCart.length > 0) {
-        earnedXP += XP_PER_FOOD_ORDER * foodCart.length;
+    // If Web3 payment is selected
+    if (paymentMethod === "botchain") {
+      if (!isConnected) {
+        setErrorMessage("Please connect your wallet first via the Navbar or Web3 popup.");
+        await connectWallet();
+        return;
+      }
+      
+      if (chainId !== 968) {
+        setErrorMessage("Please switch to BOT Chain Testnet first.");
+        await switchToBotChain();
+        return;
       }
 
-      addXP(earnedXP);
-      incrementBookings();
-      soundFx.playSuccess();
+      try {
+        setIsProcessing(true);
+        if (typeof window === "undefined" || !window.ethereum) throw new Error("No crypto wallet found");
+        
+        const provider = new BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new Contract(NEONFLIX_TICKETING_ADDRESS, NEONFLIX_TICKETING_ABI, signer);
 
-      router.push(`/booking/${showtimeId}/confirmation`);
-    }, 1800);
+        // Format data for contract
+        const seatString = selectedSeats.map(s => s.id).join(", ");
+        
+        // Execute transaction (will popup MetaMask)
+        const tx = await contract.bookTicket(movieTitle, `${date} ${time}`, seatString);
+        
+        setTxHash(tx.hash);
+        
+        // Wait for transaction to be mined
+        await tx.wait();
+        
+        // Grant gamification rewards
+        let earnedXP = XP_PER_BOOKING;
+        if (foodCart.length > 0) {
+          earnedXP += XP_PER_FOOD_ORDER * foodCart.length;
+        }
+
+        addXP(earnedXP);
+        incrementBookings();
+        soundFx.playSuccess();
+
+        // Redirect to confirmation with txHash (optional query param)
+        router.push(`/booking/${showtimeId}/confirmation?tx=${tx.hash}`);
+      } catch (error: any) {
+        console.error("Booking transaction failed:", error);
+        setErrorMessage(error.reason || error.message || "Transaction failed or rejected.");
+        setIsProcessing(false);
+        return;
+      }
+    } else {
+      // Simulate traditional payment processing
+      setIsProcessing(true);
+      setTimeout(() => {
+        let earnedXP = XP_PER_BOOKING;
+        if (foodCart.length > 0) {
+          earnedXP += XP_PER_FOOD_ORDER * foodCart.length;
+        }
+
+        addXP(earnedXP);
+        incrementBookings();
+        soundFx.playSuccess();
+
+        router.push(`/booking/${showtimeId}/confirmation`);
+      }, 1800);
+    }
   };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Left 2 Cols - Order Review */}
       <div className="lg:col-span-2 space-y-6">
+        {/* Error Message Display */}
+        {errorMessage && (
+          <div className="p-4 bg-red-900/40 border border-red-500 text-red-200 font-mono text-sm rounded flex justify-between items-center animate-pulse">
+            <span>ERROR: {errorMessage}</span>
+          </div>
+        )}
+        
         {/* Manifest Overview */}
         <div className="bg-dark-card border border-dark-border p-6 shadow-[0_0_20px_rgba(0,0,0,0.8)]">
           <div className="flex items-center justify-between pb-3 border-b border-dark-border mb-4">

@@ -56,6 +56,36 @@ export const Footer = () => {
             <div className="mt-4 p-3 bg-black/50 border border-dark-border text-xs font-[family-name:var(--font-jetbrains)] text-text-secondary">
               SYSTEM STATUS: <span className="text-neon-green animate-pulse">ONLINE</span>
             </div>
+
+            {/* BOT Chain Branding Requirement */}
+            <div className="mt-6 pt-4 border-t border-dark-border">
+              <h4 className="text-gray-500 font-[family-name:var(--font-orbitron)] text-[10px] tracking-widest mb-3 uppercase">
+                POWERED BY INFRASTRUCTURE
+              </h4>
+              <div className="flex flex-col gap-2">
+                <a 
+                  href="https://botchain.ai" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 group"
+                >
+                  <div className="w-6 h-6 rounded bg-black border border-neon-cyan/50 flex items-center justify-center text-neon-cyan group-hover:bg-neon-cyan group-hover:text-black transition-all">
+                    ⟠
+                  </div>
+                  <span className="text-sm font-[family-name:var(--font-orbitron)] font-bold text-gray-300 group-hover:text-white transition-colors">
+                    BOT CHAIN
+                  </span>
+                </a>
+                <a 
+                  href="https://scan.botchain.ai" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-[10px] font-[family-name:var(--font-jetbrains)] text-neon-cyan/70 hover:text-neon-cyan underline decoration-neon-cyan/30 underline-offset-4"
+                >
+                  View on BOT Chain Explorer
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
