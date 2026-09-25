@@ -1,4 +1,4 @@
-export const NEONFLIX_TICKETING_ADDRESS = "0xE4f8483fD454b52E98F8797c08Ac1714Bb54ea06";
+export const NEONFLIX_TICKETING_ADDRESS = "0xe4f8483fd454b52e98f8797c08ac1714bb54ea06";
 
 export const NEONFLIX_TICKETING_ABI = [
   "function bookTicket(string memory movieId, string memory showtime, string memory seatId) public",
