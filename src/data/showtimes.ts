@@ -16,7 +16,17 @@ export interface Showtime {
 
 function generateShowtimes(): Showtime[] {
   const showtimes: Showtime[] = [];
-  const today = new Date();
+  
+  // Use fixed dates instead of new Date() to ensure build consistency for GitHub Pages static export
+  const baseDates = [
+    "2026-10-10",
+    "2026-10-11",
+    "2026-10-12",
+    "2026-10-13",
+    "2026-10-14",
+    "2026-10-15",
+    "2026-10-16",
+  ];
 
   const movieSchedules: Record<string, string[]> = {
     "spiderman-brand-new-day": ["neonflix-central", "neonflix-pik", "neonflix-kemang"],
@@ -57,24 +67,22 @@ function generateShowtimes(): Showtime[] {
     Premiere: 125000,
   };
 
-  Object.entries(movieSchedules).forEach(([movieId, cinemaIds]) => {
-    cinemaIds.forEach((cinemaId) => {
+  Object.entries(movieSchedules).forEach(([movieId, cinemaIds], mIdx) => {
+    cinemaIds.forEach((cinemaId, cIdx) => {
       const studios = studioConfigs[cinemaId];
       if (!studios) return;
 
-      const studio = studios[Math.floor(Math.random() * studios.length)];
+      // Deterministic selection instead of random
+      const studio = studios[(mIdx + cIdx) % studios.length];
 
-      for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() + dayOffset);
-        const dateStr = date.toISOString().split("T")[0];
+      baseDates.forEach((dateStr, dIdx) => {
+        // Deterministic times selection
+        const dayTimes = times.filter((_, tIdx) => (mIdx + cIdx + dIdx + tIdx) % 3 !== 0);
 
-        const dayTimes = times.filter(() => Math.random() > 0.2);
-
-        dayTimes.forEach((time) => {
-          const availableSeats =
-            Math.floor(Math.random() * (studio.seats * 0.6)) +
-            Math.floor(studio.seats * 0.2);
+        dayTimes.forEach((time, tIdx) => {
+          // Deterministic seats
+          const availableSeats = Math.floor(studio.seats * 0.4) + ((mIdx + cIdx + dIdx + tIdx) % 20);
+          
           showtimes.push({
             id: `${movieId}-${cinemaId}-${dateStr}-${time.replace(":", "")}`,
             movieId,
@@ -89,7 +97,7 @@ function generateShowtimes(): Showtime[] {
             totalSeats: studio.seats,
           });
         });
-      }
+      });
     });
   });
 
