@@ -77,12 +77,12 @@ export const Footer = () => {
                   </span>
                 </a>
                 <a 
-                  href="https://scan.botchain.ai" 
+                  href="https://scan.botchain.ai/address/0xe4f8483fd454b52e98f8797c08ac1714bb54ea06" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-[10px] font-[family-name:var(--font-jetbrains)] text-neon-cyan/70 hover:text-neon-cyan underline decoration-neon-cyan/30 underline-offset-4"
                 >
-                  View on BOT Chain Explorer
+                  Verify Smart Contract on Explorer
                 </a>
               </div>
             </div>
