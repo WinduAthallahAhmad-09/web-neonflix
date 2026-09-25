@@ -54,12 +54,16 @@ export function ShowtimeSelector({ movie }: ShowtimeSelectorProps) {
     [0.35, 0.75, 0.85, 0.55]
   );
 
-  // Generate next 7 days
-  const dates = Array.from({ length: 7 }).map((_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
-    return d.toISOString().split("T")[0];
-  });
+  // Generate fixed 7 days matching the static build (Sci-Fi Mission Date)
+  const dates = [
+    "2026-10-10",
+    "2026-10-11",
+    "2026-10-12",
+    "2026-10-13",
+    "2026-10-14",
+    "2026-10-15",
+    "2026-10-16",
+  ];
 
   useEffect(() => {
     if (!selectedDate) setSelectedDate(dates[0]);
