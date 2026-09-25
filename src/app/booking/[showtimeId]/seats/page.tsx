@@ -52,7 +52,4 @@ export default function SeatsPage({ params }: { params: Promise<{ showtimeId: st
   );
 }
 
- = await import('@/data/showtimes'); return showtimes.map((s: any) => ({ showtimeId: s.id })); }
-
-
 export async function generateStaticParams() { const { showtimes } = await import('@/data/showtimes'); return showtimes.map((s: any) => ({ showtimeId: s.id })); }

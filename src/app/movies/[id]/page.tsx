@@ -33,7 +33,4 @@ export default async function MovieDetailPage({ params }: Props) {
   );
 }
 
- = await import('@/data/movies'); return movies.map((m: any) => ({ id: m.id })); }
-
-
 export async function generateStaticParams() { const { movies } = await import('@/data/movies'); return movies.map((m: any) => ({ id: m.id })); }
