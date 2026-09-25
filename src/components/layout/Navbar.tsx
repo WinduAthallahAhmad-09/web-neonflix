@@ -239,21 +239,21 @@ export const Navbar = () => {
             <button
               onClick={() => {
                 soundFx.playClick();
-                if (chainId !== 968) {
+                if (chainId !== 677) {
                   switchToBotChain();
                 } else {
                   disconnect();
                 }
               }}
               className={`hidden md:flex items-center gap-1.5 px-3 py-1.5 bg-black/80 backdrop-blur-md text-xs font-[family-name:var(--font-orbitron)] font-bold tracking-wider rounded border transition-all ${
-                chainId === 968
+                chainId === 677
                   ? "border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 shadow-[0_0_10px_rgba(0,247,255,0.2)]"
                   : "border-red-500 text-red-500 hover:bg-red-500/10 shadow-[0_0_10px_rgba(255,0,0,0.3)] animate-pulse"
               }`}
-              title={chainId === 968 ? "Connected to BOT Chain Testnet. Click to disconnect." : "Wrong Network. Click to switch to BOT Chain Testnet."}
+              title={chainId === 677 ? "Connected to BOT Chain Mainnet. Click to disconnect." : "Wrong Network. Click to switch to BOT Chain Mainnet."}
             >
-              <Shield size={12} className={chainId === 968 ? "text-neon-cyan" : "text-red-500"} />
-              {chainId === 968 
+              <Shield size={12} className={chainId === 677 ? "text-neon-cyan" : "text-red-500"} />
+              {chainId === 677 
                 ? `${address?.slice(0, 4)}...${address?.slice(-4)}`
                 : "SWITCH NET"}
             </button>

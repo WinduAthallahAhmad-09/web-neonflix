@@ -67,8 +67,8 @@ export function CheckoutForm({ showtimeId }: CheckoutFormProps) {
         return;
       }
       
-      if (chainId !== 968) {
-        setErrorMessage("Please switch to BOT Chain Testnet first.");
+      if (chainId !== 677) {
+        setErrorMessage("Please switch to BOT Chain Mainnet first.");
         await switchToBotChain();
         return;
       }

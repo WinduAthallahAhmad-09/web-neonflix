@@ -31,7 +31,7 @@ Neonflix allows users to browse cinema schedules, pick specific movie seats inte
 `0x171531E18Dcca8968799Cd2c7a2EFaF0651EA144`
 
 **BOT Chain Mainnet Contract Address:**
-`[TO BE DEPLOYED]`
+`0xE4f8483fD454b52E98F8797c08Ac1714Bb54ea06`
 
 *(The smart contract code can be found in the root directory: `NeonflixTicketing.sol`)*
 

@@ -10,16 +10,16 @@ declare global {
   }
 }
 
-const BOT_CHAIN_TESTNET = {
-  chainId: "0x3C8", // 968 in hex
-  chainName: "BOT Chain Testnet",
+const BOT_CHAIN_MAINNET = {
+  chainId: "0x2A5", // 677 in hex
+  chainName: "BOT Chain Mainnet",
   nativeCurrency: {
     name: "BOT",
     symbol: "BOT",
     decimals: 18,
   },
-  rpcUrls: ["https://rpc.bohr.life"],
-  blockExplorerUrls: ["https://scan.bohr.life/"],
+  rpcUrls: ["https://mainnet-rpc.botchain.ai"], // Fallback if user doesn't have it
+  blockExplorerUrls: ["https://scan.botchain.ai/"],
 };
 
 interface Web3State {
@@ -78,8 +78,8 @@ export const useWeb3Store = create<Web3State>((set, get) => ({
         isConnecting: false,
       });
 
-      // Automatically prompt to switch network if not on BOT Chain Testnet
-      if (chainId !== 968) {
+      // Automatically prompt to switch network if not on BOT Chain Mainnet
+      if (chainId !== 677) {
         await get().switchToBotChain();
       }
     } catch (error: any) {
@@ -131,10 +131,10 @@ export const useWeb3Store = create<Web3State>((set, get) => ({
     if (typeof window === "undefined" || !window.ethereum) return;
 
     try {
-      // Try to switch to the BOT Chain Testnet
+      // Try to switch to the BOT Chain Mainnet
       await window.ethereum.request({
         method: "wallet_switchEthereumChain",
-        params: [{ chainId: BOT_CHAIN_TESTNET.chainId }],
+        params: [{ chainId: BOT_CHAIN_MAINNET.chainId }],
       });
       
       // Update state if successful
@@ -148,7 +148,7 @@ export const useWeb3Store = create<Web3State>((set, get) => ({
         try {
           await window.ethereum.request({
             method: "wallet_addEthereumChain",
-            params: [BOT_CHAIN_TESTNET],
+            params: [BOT_CHAIN_MAINNET],
           });
           
           const provider = new BrowserProvider(window.ethereum);
