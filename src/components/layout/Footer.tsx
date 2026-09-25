@@ -69,8 +69,8 @@ export const Footer = () => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 group"
                 >
-                  <div className="w-6 h-6 rounded bg-black border border-neon-cyan/50 flex items-center justify-center text-neon-cyan group-hover:bg-neon-cyan group-hover:text-black transition-all">
-                    ⟠
+                  <div className="w-6 h-6 rounded bg-black flex items-center justify-center overflow-hidden relative">
+                    <img src="/images/botchain-logo.png" alt="BOT Chain Logo" className="w-full h-full object-cover" />
                   </div>
                   <span className="text-sm font-[family-name:var(--font-orbitron)] font-bold text-gray-300 group-hover:text-white transition-colors">
                     BOT CHAIN
